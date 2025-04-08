@@ -1,0 +1,16 @@
+[
+    {
+      "modid": "${modId}",
+      "name": "${modName}",
+      "description": "Mod backporting player faces in the tab menu.",
+      "version": "${modVersion}",
+      "mcversion": "${minecraftVersion}",
+      "url": "https://github.com/trollogyadherent/TabFaces",
+      "updateUrl": "",
+      "authorList": ["trollogyadherent"],
+      "credits": "FalsePattern",
+      "logoFile": "assets/${modId}/logo.png",
+      "screenshots": [],
+      "dependencies": []
+    }
+]
