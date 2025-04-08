@@ -16,13 +16,12 @@ import cpw.mods.fml.client.config.IConfigElement;
 public class ConfigGui extends GuiConfig {
 
     private static IConfigElement ce = new ConfigElement(Config.getConfigCategoryByString(Config.Categories.client));
-    private static IConfigElement ceCMM = new ConfigElement(Config.getConfigCategoryByString(Config.Categories.common));
 
     public ConfigGui(GuiScreen parent) {
         // this.parentScreen = parent;
         super(
             parent,
-            ImmutableList.of(ce, ceCMM),
+            ImmutableList.of(ce),
             "tabfaces",
             "tabfaces",
             false,

@@ -85,27 +85,13 @@ public class GameOverlayGuiHandler extends GuiIngame {
                         .getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
 
-                    ResourceLocation rl;
-                    if (Minecraft.getMinecraft().thePlayer.getDisplayName()
-                        .equals(player.name)) {
-                        rl = Minecraft.getMinecraft().thePlayer.getLocationSkin();
-                    } else {
-                        rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(player.name);
-                        if (rl == null) {
-                            if (Minecraft.getMinecraft().theWorld.getPlayerEntityByName(player.name) != null) {
-                                rl = ((AbstractClientPlayer) Minecraft.getMinecraft().theWorld
-                                    .getPlayerEntityByName(player.name)).getLocationSkin();
-                                TabFaces.varInstanceClient.clientRegistry.setTabMenuResourceLocation(player.name, rl);
-                            }
-                            if (rl == null) {
-                                if (Config.showQuestionMarkIfUnknown) {
-                                    rl = TabFaces.varInstanceClient.defaultResourceLocation;
-                                }
-                            }
+                    ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(player.name);
+                    if (rl == null) {
+                        if (Config.showQuestionMarkIfUnknown) {
+                            rl = TabFaces.varInstanceClient.defaultResourceLocation;
+                        } else {
+                            rl = AbstractClientPlayer.locationStevePng;
                         }
-                    }
-                    if (rl == null && Config.showQuestionMarkIfUnknown) {
-                        rl = TabFaces.varInstanceClient.defaultResourceLocation;
                     }
 
                     if (rl != null) {
@@ -116,14 +102,9 @@ public class GameOverlayGuiHandler extends GuiIngame {
                         // tileWidth, float tileHeight
                         Gui.func_152125_a(xPos, yPos, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
 
-                        fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
-                    } else {
-                        if (Config.alignToLeftIfNoQuestion) {
-                            fontRenderer.drawStringWithShadow(displayName, xPos, yPos, 16777215);
-                        } else {
-                            fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
-                        }
                     }
+
+                    fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
 
                     if (scoreobjective != null) {
                         int endX = xPos + fontRenderer.getStringWidth(displayName) + 5;

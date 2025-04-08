@@ -36,7 +36,7 @@ public class PlayerEventHandler {
         ResourceLocation rl = ((AbstractClientPlayer) e.entity).getLocationSkin();
 
         TabFaces.debug("Detected player join event: " + displayName);
-        TabFaces.varInstanceClient.clientRegistry.insert(displayName, rl);
+        TabFaces.varInstanceClient.clientRegistry.insert(displayName, ((AbstractClientPlayer) e.entity).getUniqueID(), rl);
         TabFaces.debug("Player " + displayName + "joined");
     }
 

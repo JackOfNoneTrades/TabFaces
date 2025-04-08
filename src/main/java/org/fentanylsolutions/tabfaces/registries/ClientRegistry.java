@@ -1,66 +1,62 @@
 package org.fentanylsolutions.tabfaces.registries;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+
+import com.mojang.authlib.GameProfile;
+import org.fentanylsolutions.tabfaces.TabFaces;
 
 public class ClientRegistry {
 
-    private ArrayList<Data> playerEntities;
+    private Map<String, Data> playerEntities;
 
     public ClientRegistry() {
-        this.playerEntities = new ArrayList<>();
+        this.playerEntities = new HashMap<>();
     }
 
-    public void insert(String displayName, ResourceLocation skinResourceLocation) {
-        if (getDataByDisplayName(displayName) == null) {
-            this.playerEntities.add(new Data(displayName, skinResourceLocation));
-        }
-    }
-
-    Data getDataByDisplayName(String displayName) {
-        for (Data data : this.playerEntities) {
-            if (data.displayName.equals(displayName)) {
-                return data;
-            }
-        }
-        return null;
+    public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation) {
+        playerEntities.putIfAbsent(displayName, new Data(displayName, id, skinResourceLocation));
     }
 
     public void removeByDisplayName(String displayName) {
-        Data data = getDataByDisplayName(displayName);
-        if (data != null) {
-            this.playerEntities.remove(data);
-        }
+        playerEntities.remove(displayName);
     }
 
-    public void setTabMenuResourceLocation(String displayName, ResourceLocation tabMenuResourceLocation) {
-        Data data = getDataByDisplayName(displayName);
+    public void setTabMenuResourceLocation(String displayName, UUID id, ResourceLocation tabMenuResourceLocation) {
+        Data data = playerEntities.get(displayName);
         if (data == null) {
-            insert(displayName, tabMenuResourceLocation);
-            return;
+            insert(displayName, id, tabMenuResourceLocation);
+        } else {
+            data.tabMenuResourceLocation = tabMenuResourceLocation;
         }
-        data.tabMenuResourceLocation = tabMenuResourceLocation;
     }
 
     public ResourceLocation getTabMenuResourceLocation(String displayName) {
-        Data data = getDataByDisplayName(displayName);
-        if (data == null) {
-            return null;
+        if (TabFaces.minecraftRef.thePlayer.getDisplayName()
+            .equals(displayName)) {
+            return TabFaces.minecraftRef.thePlayer.getLocationSkin();
         }
-        return data.tabMenuResourceLocation;
+        Data data = playerEntities.get(displayName);
+        GameProfile gameprofile = new GameProfile(null, displayName);
+        TabFaces.sessionService.fillProfileProperties(gameprofile, true);
+        return (data != null) ? data.tabMenuResourceLocation : null;
     }
 
     public void clear() {
-        this.playerEntities = new ArrayList<>();
+        playerEntities.clear();
     }
 
     private class Data {
 
         String displayName;
+        UUID id;
         ResourceLocation tabMenuResourceLocation;
 
-        Data(String displayName, ResourceLocation tabResourceLocation) {
+        Data(String displayName, UUID id, ResourceLocation tabResourceLocation) {
             this.displayName = displayName;
             this.tabMenuResourceLocation = tabResourceLocation;
         }

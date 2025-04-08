@@ -17,7 +17,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         TabFaces.varInstanceClient = new VarInstanceClient();
-        MinecraftForge.EVENT_BUS.register(new GameOverlayGuiHandler(Minecraft.getMinecraft()));
+        MinecraftForge.EVENT_BUS.register(new GameOverlayGuiHandler(TabFaces.minecraftRef));
 
         PlayerEventHandler playerEventHandler = new PlayerEventHandler();
         MinecraftForge.EVENT_BUS.register(playerEventHandler);
