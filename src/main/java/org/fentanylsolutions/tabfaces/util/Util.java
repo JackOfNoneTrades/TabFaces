@@ -24,15 +24,7 @@ public class Util {
             .getSide() == Side.SERVER;
     }
 
-    public static ResourceLocation skinResourceLocation(UUID uuid, String displayName) {
-        GameProfile profile = new GameProfile(uuid, displayName);
-        try {
-            GameProfile res = VarInstanceClient.sessionService.fillProfileProperties(profile, true);
-            System.out.println(res);
-        } catch (Exception e) {
-            System.out.println("Caught exception");
-            return AbstractClientPlayer.locationStevePng;
-        }
+    public static ResourceLocation skinResourceLocation(GameProfile profile) {
         Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> resultMap = VarInstanceClient.minecraftRef
             .func_152342_ad()
             .func_152788_a(profile);
@@ -44,6 +36,17 @@ public class Util {
         }
         return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
             : AbstractClientPlayer.locationStevePng;
+    }
+
+    /* This function should be called from a thread, as it makes a sync network call */
+    public static GameProfile getFullProfile(UUID id, String displayName) {
+        GameProfile profile = new GameProfile(id, displayName);
+        try {
+            return VarInstanceClient.sessionService.fillProfileProperties(profile, true);
+        } catch (Exception e) {
+            TabFaces.error("Failed to get profile for " + displayName + ":" + id.toString());
+        }
+        return null;
     }
 
     public static boolean onServer() {

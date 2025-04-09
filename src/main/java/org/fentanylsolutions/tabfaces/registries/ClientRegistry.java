@@ -12,6 +12,8 @@ import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
+import com.mojang.authlib.GameProfile;
+
 public class ClientRegistry {
 
     private Map<String, Data> playerEntities;
@@ -47,8 +49,14 @@ public class ClientRegistry {
             return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
                 : AbstractClientPlayer.locationStevePng;
         }
-        if (data.skinResourceLocation == null) {
-            insert(displayName, data.id, Util.skinResourceLocation(data.id, displayName));
+        if (data.skinResourceLocation == null && data.profile == null && !data.resolving) {
+            data.resolving = true;
+            new Thread(() -> {
+                data.profile = Util.getFullProfile(data.id, data.displayName);
+                data.resolving = false;
+            }, "GameProfileResolverThread-" + displayName).start();
+        } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
+            insert(displayName, data.id, Util.skinResourceLocation(data.profile));
         }
         return data.skinResourceLocation;
     }
@@ -81,11 +89,14 @@ public class ClientRegistry {
         String displayName;
         UUID id;
         ResourceLocation skinResourceLocation;
+        volatile boolean resolving = false;
+        volatile GameProfile profile;
         long timestamp;
 
         Data(String displayName, UUID id, ResourceLocation skinResourceLocation) {
             this.displayName = displayName;
             this.id = id;
+            this.profile = null;
             this.skinResourceLocation = skinResourceLocation;
             this.timestamp = System.currentTimeMillis();
         }
