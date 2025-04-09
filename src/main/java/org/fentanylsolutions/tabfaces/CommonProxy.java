@@ -1,19 +1,39 @@
 package org.fentanylsolutions.tabfaces;
 
+import net.minecraftforge.common.MinecraftForge;
+
+import org.fentanylsolutions.tabfaces.event.ServerEventHandler;
+import org.fentanylsolutions.tabfaces.packet.PacketHandler;
 import org.fentanylsolutions.tabfaces.util.Util;
 
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 public class CommonProxy {
 
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
-    // GameRegistry." (Remove if not needed)
+    // GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
-        TabFaces.LOG
-            .info("TabFaces version " + Tags.VERSION + " running on " + (Util.isServer() ? "Server" : "Client"));
+        TabFaces.info("TabFaces version " + Tags.VERSION + " running on " + (Util.isServer() ? "Server" : "Client"));
 
         TabFaces.confFile = event.getSuggestedConfigurationFile();
         Config.synchronizeConfiguration(TabFaces.confFile);
+
+        PacketHandler.initPackets();
+        if (Util.isServer()) {
+            ServerEventHandler serverEventHandler = new ServerEventHandler();
+            MinecraftForge.EVENT_BUS.register(serverEventHandler);
+            FMLCommonHandler.instance()
+                .bus()
+                .register(serverEventHandler);
+        }
     }
 
     public void init(FMLInitializationEvent event) {}

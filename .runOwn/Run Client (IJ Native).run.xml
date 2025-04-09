@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Client (IJ Native)" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="zulu-1.8" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="MCMODDING_DEBUG_MODE" value="TRUE" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="GradleStart" />
+    <module name="TabFacesNew.ideVirtualMain" />
+    <option name="PROGRAM_PARAMETERS" value="&quot;--username&quot; &quot;Developer&quot; &quot;--version&quot; &quot;1.7.10&quot; &quot;--gameDir&quot; &quot;$PROJECT_DIR$/run&quot; &quot;--assetsDir&quot; &quot;$USER_HOME$/.gradle/caches/retro_futura_gradle/assets&quot; &quot;--assetIndex&quot; &quot;1.7.10&quot; &quot;--uuid&quot; &quot;b991a30e-a859-4a4e-bec6-cd414f7f34b9&quot; &quot;--userProperties&quot; &quot;{}&quot; &quot;--accessToken&quot; &quot;eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkcmFzbCIsInN1YiI6Ijk3ZDZjMmM3LTQ5N2YtNDJlMC05NTA1LTZjM2Q0M2MxZDE5MyIsImV4cCI6MjE0NTkxNjgwMCwiaWF0IjoxNzQ0MjA3MTYzLCJ2ZXJzaW9uIjowLCJzdGFsZUF0IjoyMTQ1OTE2ODAwfQ.U9zKQoDKrg536Au2d6NK2w0NLy4ryW1AITcDy9tnMlm7Mdn9MXrnxdFLfQNXgOeNiItQPFNIuaPAMNOj724umlNKTf5X2fx_XJ9W70q9V6uyvQaBvV04Q8dreHLbf5filpBUJCYnw4LhHsvMK7qmZzEHpfK4iRSjC8V8lxfwNGp1b3KAv8fIARjmEFmEgeHtWe0GyT4GgVpPGwptM71uAnZz18KKe4MBegrUxDFeswCP6qw2b9hTE500nXvrHEvdgkXvFy1AtLa0mw_eP9otqPfG9GXJZRd8_NbspdvJ_KawRw7RIWV5v54716IVwNJIkw2ZNPh9PQaRFv719WaI4cXRe_wTNRYN_n-z7-PIzpWF7iVfqA2-Po1_PgQZpSpfNSOP8SQ7FTII9UsF-i_socVCyahjsOZ9iwh03Js-kRyywK_Wbb2SsyuT9tSFi1PTVRG-NdTDns83kZo1FIQLmgYNsLgiyoXdqfgDm-LSPqnD9uIm4iFiHh7PeoU_PCHBn6eSSU6P1DzvyolL_X27_k-SoO_5PsoyFXXiBEcWT2_bvsCuQG3a-ASQ9eusBXOJo0EwMrECxPjckESvrsKs3VrQiCKFL9aXgQmaBoJI07p5-XHD9sxmoAdDb3GcMBIA_7X1G8QnJZCiAyusc6tlGC9Y7lXPoXBfQ6inpXVVmLI&quot;" />
+    <option name="VM_PARAMETERS" value="&quot;-ea:org.fentanylsolutions.tabfaces&quot; &quot;-javaagent:$PROJECT_DIR$/../../Explo/vanilla/authlib-injector-1.2.5.jar=https://drasl.fentanylsolutions.org&quot; &quot;-Dfml.ignoreInvalidMinecraftCertificates=true&quot; &quot;-Djava.library.path=$PROJECT_DIR$/run/natives/lwjgl2:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib&quot;" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

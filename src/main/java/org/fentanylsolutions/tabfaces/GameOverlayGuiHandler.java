@@ -1,11 +1,13 @@
 package org.fentanylsolutions.tabfaces;
 
-import java.awt.*;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.scoreboard.Score;
@@ -28,6 +30,7 @@ public class GameOverlayGuiHandler extends GuiIngame {
         fontRenderer = mc.fontRenderer;
     }
 
+    @SuppressWarnings("unused")
     @SubscribeEvent
     public void open(RenderGameOverlayEvent.Pre e) {
         if (e.type == RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
@@ -49,7 +52,7 @@ public class GameOverlayGuiHandler extends GuiIngame {
         if (mc.gameSettings.keyBindPlayerList.getIsKeyPressed()
             && (!mc.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
             this.mc.mcProfiler.startSection("playerList");
-            List<GuiPlayerInfo> players = (List<GuiPlayerInfo>) handler.playerInfoList;
+            List<GuiPlayerInfo> players = handler.playerInfoList;
 
             ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
             int width = res.getScaledWidth();
@@ -85,14 +88,8 @@ public class GameOverlayGuiHandler extends GuiIngame {
                         .getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
 
-                    ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(player.name);
-                    if (rl == null) {
-                        if (Config.showQuestionMarkIfUnknown) {
-                            rl = TabFaces.varInstanceClient.defaultResourceLocation;
-                        } else {
-                            rl = AbstractClientPlayer.locationStevePng;
-                        }
-                    }
+                    ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
+                        .getTabMenuResourceLocation(player.name);
 
                     if (rl != null) {
                         mc.getTextureManager()

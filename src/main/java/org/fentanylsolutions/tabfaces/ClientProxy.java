@@ -1,23 +1,27 @@
 package org.fentanylsolutions.tabfaces;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.fentanylsolutions.tabfaces.event.PlayerEventHandler;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
+@SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
-
-    // Override CommonProxy methods here, if you want a different behaviour on the client (e.g. registering renders).
-    // Don't forget to call the super methods as well.
 
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         TabFaces.varInstanceClient = new VarInstanceClient();
-        MinecraftForge.EVENT_BUS.register(new GameOverlayGuiHandler(TabFaces.minecraftRef));
+        MinecraftForge.EVENT_BUS.register(new GameOverlayGuiHandler(VarInstanceClient.minecraftRef));
 
         PlayerEventHandler playerEventHandler = new PlayerEventHandler();
         MinecraftForge.EVENT_BUS.register(playerEventHandler);

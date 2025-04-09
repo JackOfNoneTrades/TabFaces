@@ -4,61 +4,90 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
 
-import com.mojang.authlib.GameProfile;
+import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.util.Util;
+import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
 public class ClientRegistry {
 
     private Map<String, Data> playerEntities;
+    private float tickCounter;
 
     public ClientRegistry() {
         this.playerEntities = new HashMap<>();
+        this.tickCounter = 0;
     }
 
     public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation) {
-        playerEntities.putIfAbsent(displayName, new Data(displayName, id, skinResourceLocation));
+        TabFaces.debug(
+            "Inserted " + displayName
+                + ", "
+                + id.toString()
+                + ", "
+                + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
+        playerEntities.put(displayName, new Data(displayName, id, skinResourceLocation));
     }
 
     public void removeByDisplayName(String displayName) {
+        TabFaces.debug("Removed " + displayName + " by displayname");
         playerEntities.remove(displayName);
     }
 
-    public void setTabMenuResourceLocation(String displayName, UUID id, ResourceLocation tabMenuResourceLocation) {
+    public ResourceLocation getTabMenuResourceLocation(String displayName) {
+        if (VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
+            .equals(displayName)) {
+            return VarInstanceClient.minecraftRef.thePlayer.getLocationSkin();
+        }
         Data data = playerEntities.get(displayName);
         if (data == null) {
-            insert(displayName, id, tabMenuResourceLocation);
-        } else {
-            data.tabMenuResourceLocation = tabMenuResourceLocation;
+            return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
+                : AbstractClientPlayer.locationStevePng;
         }
-    }
-
-    public ResourceLocation getTabMenuResourceLocation(String displayName) {
-        if (TabFaces.minecraftRef.thePlayer.getDisplayName()
-            .equals(displayName)) {
-            return TabFaces.minecraftRef.thePlayer.getLocationSkin();
+        if (data.skinResourceLocation == null) {
+            insert(displayName, data.id, Util.skinResourceLocation(data.id, displayName));
         }
-        Data data = playerEntities.get(displayName);
-        GameProfile gameprofile = new GameProfile(null, displayName);
-        TabFaces.sessionService.fillProfileProperties(gameprofile, true);
-        return (data != null) ? data.tabMenuResourceLocation : null;
+        return data.skinResourceLocation;
     }
 
     public void clear() {
+        TabFaces.debug("Clearing registry");
         playerEntities.clear();
+    }
+
+    public void tick() {
+        if (!Util.onServer()) {
+            return;
+        }
+        this.tickCounter++;
+        if (this.tickCounter / 20.0 >= Config.skinTtlInterval) {
+            this.tickCounter = 0;
+            TabFaces.debug("Running skin TTL check (every " + Config.skinTtlInterval + " seconds)");
+            long currentTime = System.currentTimeMillis();
+            for (Data data : playerEntities.values()) {
+                if (data.skinResourceLocation != null && (currentTime - data.timestamp > Config.skinTtl * 1000)) {
+                    TabFaces.debug("Skin too old, setting to null");
+                    data.skinResourceLocation = null;
+                }
+            }
+        }
     }
 
     private class Data {
 
         String displayName;
         UUID id;
-        ResourceLocation tabMenuResourceLocation;
+        ResourceLocation skinResourceLocation;
+        long timestamp;
 
-        Data(String displayName, UUID id, ResourceLocation tabResourceLocation) {
+        Data(String displayName, UUID id, ResourceLocation skinResourceLocation) {
             this.displayName = displayName;
-            this.tabMenuResourceLocation = tabResourceLocation;
+            this.id = id;
+            this.skinResourceLocation = skinResourceLocation;
+            this.timestamp = System.currentTimeMillis();
         }
     }
 }

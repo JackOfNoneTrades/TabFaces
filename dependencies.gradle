@@ -35,5 +35,4 @@
  */
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev")
-    shadowImplementation("org.l33tlabs.twl:pngdecoder:1.0") // https://github.com/MatthiasMann/twl/blob/master/src/de/matthiasmann/twl/utils/PNGDecoder.java
 }
