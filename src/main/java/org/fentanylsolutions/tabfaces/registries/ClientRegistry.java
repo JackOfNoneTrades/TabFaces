@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
@@ -19,6 +20,7 @@ public class ClientRegistry {
 
     private Map<String, Data> playerEntities;
     private float tickCounter;
+    private volatile boolean fetchingServerStatus = false;
 
     public ClientRegistry() {
         this.playerEntities = new HashMap<>();
@@ -49,18 +51,29 @@ public class ClientRegistry {
     }
 
     public ResourceLocation getTabMenuResourceLocation(String displayName, boolean removeAfterTTL, int ttl) {
+        /* thePlayer is null when we're in the server selection menu */
         if (VarInstanceClient.minecraftRef.thePlayer != null && VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
             .equals(displayName)) {
             return VarInstanceClient.minecraftRef.thePlayer.getLocationSkin();
         }
         Data data = playerEntities.get(displayName);
         if (data == null) {
+            if (!fetchingServerStatus) {
+                fetchingServerStatus = true;
+                new Thread(() -> {
+                    TabFaces.debug("Starting new ServerPingThread");
+                    PingUtil.ServerStatusCallbackClientRegistry callback = new PingUtil.ServerStatusCallbackClientRegistry();
+                    PingUtil.pingServer(callback);
+                    fetchingServerStatus = false;
+                }, "ServerPingThread-" + displayName).start();
+            }
             return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
                 : AbstractClientPlayer.locationStevePng;
         }
         if (data.skinResourceLocation == null && data.profile == null && !data.resolving) {
             data.resolving = true;
             new Thread(() -> {
+                TabFaces.debug("Starting new GameProfileResolverThread");
                 data.profile = Util.getFullProfile(data.id, data.displayName);
                 data.resolving = false;
             }, "GameProfileResolverThread-" + displayName).start();

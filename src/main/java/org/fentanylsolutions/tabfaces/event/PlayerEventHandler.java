@@ -51,15 +51,24 @@ public class PlayerEventHandler {
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            return;
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            // If the Right arrow key is not pressed and we previously detected it being pressed
+            if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && wasKeyDown) {
+                TabFaces.debug("Right Key pressed.");
+                PingUtil.ServerStatusCallbackClientRegistry callback = new PingUtil.ServerStatusCallbackClientRegistry();
+                PingUtil.pingServer(callback);
+
+                // Reset the wasKeyDown state to prevent continuous triggering
+                wasKeyDown = false;
+            }
+            // If the Right arrow key is pressed, set the wasKeyDown flag
+            else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && !wasKeyDown) {
+                wasKeyDown = true;
+            }
         }
-        if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && wasKeyDown) {
-            TabFaces.debug("Right Key pressed.");
-            PingUtil.ServerStatusCallback callback = new PingUtil.ServerStatusCallback();
-            PingUtil.pingServer(callback);
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            wasKeyDown = true;
+        // Reset the wasKeyDown state if LShift is not pressed anymore
+        else {
+            wasKeyDown = false;
         }
     }
 
