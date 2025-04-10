@@ -8,7 +8,6 @@
   "client": [
     "minecraft.MixinGuiMultiplayer",
     "minecraft.MixinOldServerPingerINetHandlerStatusClient",
-    "minecraft.MixinServerData",
     "minecraft.MixinGui",
     "minecraft.MixinGuiScreen",
     "minecraft.MixinServerListEntryNormal"

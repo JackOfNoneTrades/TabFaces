@@ -1,6 +1,5 @@
 package org.fentanylsolutions.tabfaces.util;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -88,10 +87,8 @@ public class Util {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             int k = 0;
-            Iterator iterator = textLines.iterator();
 
-            while (iterator.hasNext()) {
-                String s = (String) iterator.next();
+            for (String s : textLines) {
                 int l = fontRenderer.getStringWidth(s);
 
                 if (l > k) {
@@ -116,16 +113,32 @@ public class Util {
             }
 
             int finalAddedWidth = 0;
+            int longestRealName = 0;
+            int longestFakeName = 0;
             if (profiles != null) {
                 for (String line : textLines) {
                     for (GameProfile profile : profiles) {
-                        if (!profile.getId()
-                            .equals(Util.fakePlayerUUID) && line.equals(profile.getName())) {
-                            finalAddedWidth = faceWidth;
+                        if (line.equals(profile.getName())) {
+                            int strWidth = fontRenderer.getStringWidth(profile.getName());
+                            if (!profile.getId()
+                                .equals(Util.fakePlayerUUID)) {
+                                if (strWidth > longestRealName) {
+                                    longestRealName = strWidth;
+                                }
+                            } else {
+                                if (fontRenderer.getStringWidth(profile.getName()) > longestFakeName) {
+                                    longestFakeName = strWidth;
+                                }
+                            }
                             break;
                         }
                     }
                 }
+            }
+            if (longestRealName > longestFakeName) {
+                finalAddedWidth = 10;
+            } else if (longestFakeName - longestRealName < faceWidth) {
+                finalAddedWidth = faceWidth - (longestFakeName - longestRealName);
             }
 
             ((IMixinGui) screen).setZLevel(300.0F);
@@ -165,14 +178,12 @@ public class Util {
 
             for (int i2 = 0; i2 < textLines.size(); ++i2) {
                 String s1 = textLines.get(i2);
-                // GameProfile[] profiles =
                 boolean fake = true;
                 if (profiles != null) {
                     for (GameProfile profile : profiles) {
                         if (!profile.getId()
                             .equals(Util.fakePlayerUUID) && profile.getName()
                                 .equals(s1)) {
-                            // TabFaces.info("Bingo, matched " + s1);
                             fontRenderer.drawStringWithShadow(s1, j2 + faceWidth, k2, -1);
 
                             if (!TabFaces.varInstanceClient.clientRegistry.displayNameInRegistry(s1)) {
@@ -197,7 +208,7 @@ public class Util {
                         }
                     }
                 }
-                if (fake || profiles == null) {
+                if (fake) {
                     fontRenderer.drawStringWithShadow(s1, j2, k2, -1);
                 }
 
