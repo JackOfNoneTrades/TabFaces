@@ -135,10 +135,12 @@ public class Util {
                     }
                 }
             }
-            if (longestRealName > longestFakeName) {
-                finalAddedWidth = 10;
-            } else if (longestFakeName - longestRealName < faceWidth) {
-                finalAddedWidth = faceWidth - (longestFakeName - longestRealName);
+            if (longestRealName > 0) {
+                if (longestRealName >= longestFakeName) {
+                    finalAddedWidth = 10;
+                } else if (longestFakeName - longestRealName < faceWidth) {
+                    finalAddedWidth = faceWidth - (longestFakeName - longestRealName);
+                }
             }
 
             ((IMixinGui) screen).setZLevel(300.0F);
