@@ -1,6 +1,7 @@
 # TabFaces mod for Minecraft Forge 1.7.10
 
 ![screeenshot1](images/screenshot1.png) ![screeenshot2](images/screenshot2.png)
+![screeenshot2](images/screenshot3.png)
 
 ## Dependencies
 
@@ -9,7 +10,7 @@ As of version 1.0.2, [UniMixins](https://github.com/LegacyModdingMC/UniMixins) i
 ## FAQ
 ### What does this mod do?
 
-It backports player faces in the tab menu.
+It backports player faces in the tab menu. As of version 1.0.2, it also adds player faces in the server selection menu.
 
 ### Client? Server? What side?
 
