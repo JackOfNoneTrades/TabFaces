@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiMultiplayer;
-import org.fentanylsolutions.tabfaces.util.Util;
+import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -40,7 +40,7 @@ public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGui
 
     private void myCustomTooltipRenderer(List<String> lines, int mouseX, int mouseY) {
         if (Config.enableFacesInServerMenu) {
-            Util.drawHoveringTextWithFaces(this, visibleInfo, lines, mouseX, mouseY);
+            ClientUtil.drawHoveringTextWithFaces(this, visibleInfo, lines, mouseX, mouseY);
         } else {
             this.drawHoveringText(lines, mouseX, mouseY, this.fontRendererObj);
         }

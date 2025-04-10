@@ -15,7 +15,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-import org.fentanylsolutions.tabfaces.util.Util;
+import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -96,19 +96,19 @@ public class GameOverlayGuiHandler extends GuiIngame {
 
                     }
 
-                    Util.fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
+                    ClientUtil.fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
 
                     if (scoreobjective != null) {
-                        int endX = xPos + Util.fontRenderer.getStringWidth(displayName) + 5;
+                        int endX = xPos + ClientUtil.fontRenderer.getStringWidth(displayName) + 5;
                         int maxX = xPos + columnWidth - 12 - 5;
 
                         if (maxX - endX > 5) {
                             Score score = scoreobjective.getScoreboard()
                                 .func_96529_a(player.name, scoreobjective);
                             String scoreDisplay = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
-                            Util.fontRenderer.drawStringWithShadow(
+                            ClientUtil.fontRenderer.drawStringWithShadow(
                                 scoreDisplay,
-                                maxX - Util.fontRenderer.getStringWidth(scoreDisplay),
+                                maxX - ClientUtil.fontRenderer.getStringWidth(scoreDisplay),
                                 yPos,
                                 16777215);
                         }

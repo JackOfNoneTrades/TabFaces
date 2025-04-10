@@ -108,7 +108,7 @@ public class PingUtil {
         System.out.println(
             Minecraft.getMinecraft()
                 .func_147104_D().serverIP);
-        String[] addressPair = parseAddress(Util.minecraftInstance.func_147104_D().serverIP);
+        String[] addressPair = parseAddress(ClientUtil.minecraftInstance.func_147104_D().serverIP);
 
         try {
             NetworkManager networkManager = NetworkManager

@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
@@ -80,7 +81,7 @@ public class ClientRegistry {
                 data.resolving = false;
             }, "GameProfileResolverThread-" + displayName).start();
         } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
-            insert(displayName, data.id, Util.skinResourceLocation(data.profile), removeAfterTTL, ttl);
+            insert(displayName, data.id, ClientUtil.skinResourceLocation(data.profile), removeAfterTTL, ttl);
         }
         return data.skinResourceLocation;
     }

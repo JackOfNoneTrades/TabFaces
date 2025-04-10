@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.util.Util;
+import org.fentanylsolutions.tabfaces.util.ClientUtil;
 
 public class CommandTest implements ICommand {
 
@@ -41,7 +41,7 @@ public class CommandTest implements ICommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] argString) {
-        if (sender instanceof EntityPlayerMP && !Util.isOp((EntityPlayerMP) sender)) {
+        if (sender instanceof EntityPlayerMP && !ClientUtil.isOp((EntityPlayerMP) sender)) {
             sender
                 .addChatMessage(new ChatComponentText((char) 167 + "cYou do not have permission to use this command"));
             return;
