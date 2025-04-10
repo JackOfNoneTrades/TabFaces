@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8.7-unimixins",
   "package": "tabfaces.mixins",
-  "refmap": "mixins.TabFaces.refmap.json",
+  "refmap": "mixins.tabfaces.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8"
 }

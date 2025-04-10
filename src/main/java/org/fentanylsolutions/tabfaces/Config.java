@@ -12,7 +12,7 @@ public class Config {
 
         /* client */
         public static final boolean showQuestionMarkIfUnknown = true;
-        public static final int skinTtl = 120;
+        public static final int skinTtl = 1200;
         public static final int skinTtlInterval = 120;
         public static final boolean enableFacesInTabMenu = true;
         public static final boolean enableFacesInServerMenu = true;

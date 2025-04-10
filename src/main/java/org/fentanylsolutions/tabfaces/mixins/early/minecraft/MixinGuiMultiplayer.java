@@ -4,28 +4,26 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ServerSelectionList;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiMultiplayer;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.mojang.authlib.GameProfile;
 
+@SuppressWarnings("unused")
 @Mixin(GuiMultiplayer.class)
 public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGuiMultiplayer {
 
     public GameProfile[] visibleInfo;
-    @Shadow
-    ServerSelectionList field_146803_h;
 
     /**
      * Redirects the call to func_146283_a inside drawScreen to call our own method instead.
      */
+    @SuppressWarnings("unused")
     @Redirect(
         method = "drawScreen",
         at = @At(
@@ -41,7 +39,6 @@ public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGui
     }
 
     private void myCustomTooltipRenderer(List<String> lines, int mouseX, int mouseY) {
-        // TabFaces.debug("SNEED: " + mouseX + ":" + mouseY);
         if (Config.enableFacesInServerMenu) {
             Util.drawHoveringTextWithFaces(this, visibleInfo, lines, mouseX, mouseY);
         } else {

@@ -7,6 +7,7 @@ import org.fentanylsolutions.tabfaces.access.IMixinGuiScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+@SuppressWarnings("unused")
 @Mixin(GuiScreen.class)
 public class MixinGuiScreen implements IMixinGuiScreen {
 

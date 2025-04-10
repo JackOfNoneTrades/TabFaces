@@ -6,6 +6,7 @@ import org.fentanylsolutions.tabfaces.access.IMixinGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+@SuppressWarnings("unused")
 @Mixin(Gui.class)
 public class MixinGui implements IMixinGui {
 

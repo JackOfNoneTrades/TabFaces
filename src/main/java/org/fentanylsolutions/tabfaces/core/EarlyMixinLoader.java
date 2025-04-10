@@ -23,7 +23,6 @@ public class EarlyMixinLoader implements IEarlyMixinLoader, IFMLLoadingPlugin {
         final List<String> mixins = new ArrayList<>();
         mixins.add("minecraft.MixinGuiMultiplayer");
         mixins.add("minecraft.MixinOldServerPingerINetHandlerStatusClient");
-        mixins.add("minecraft.MixinServerData");
         mixins.add("minecraft.MixinGui");
         mixins.add("minecraft.MixinGuiScreen");
         mixins.add("minecraft.MixinServerListEntryNormal");
