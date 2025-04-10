@@ -2,6 +2,10 @@
 
 ![screeenshot1](images/screenshot1.png) ![screeenshot2](images/screenshot2.png)
 
+## Dependencies
+
+As of version 1.0.2, [UniMixins](https://github.com/LegacyModdingMC/UniMixins) is a required dependency.
+
 ## FAQ
 ### What does this mod do?
 
@@ -9,7 +13,7 @@ It backports player faces in the tab menu.
 
 ### Client? Server? What side?
 
-Server mandatory, client optional. The client has only a list of player display names on `1.7.10`, it needs to get packets from the server.
+As of version 1.0.2, client only, will do nothing on the server.
 
 ### Will this work with [insert auth mod]?
 
