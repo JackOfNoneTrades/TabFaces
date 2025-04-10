@@ -1,6 +1,7 @@
 package org.fentanylsolutions.tabfaces.registries;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,14 +25,22 @@ public class ClientRegistry {
         this.tickCounter = 0;
     }
 
-    public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation) {
+    public boolean displayNameInRegistry(String displayName) {
+        return playerEntities.containsKey(displayName);
+    }
+
+    public Data getByDisplayName(String displayName) {
+        return playerEntities.get(displayName);
+    }
+
+    public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL, int ttl) {
         TabFaces.debug(
             "Inserted " + displayName
                 + ", "
                 + id.toString()
                 + ", "
                 + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
-        playerEntities.put(displayName, new Data(displayName, id, skinResourceLocation));
+        playerEntities.put(displayName, new Data(displayName, id, skinResourceLocation, removeAfterTTL, ttl));
     }
 
     public void removeByDisplayName(String displayName) {
@@ -39,8 +48,8 @@ public class ClientRegistry {
         playerEntities.remove(displayName);
     }
 
-    public ResourceLocation getTabMenuResourceLocation(String displayName) {
-        if (VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
+    public ResourceLocation getTabMenuResourceLocation(String displayName, boolean removeAfterTTL, int ttl) {
+        if (VarInstanceClient.minecraftRef.thePlayer != null && VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
             .equals(displayName)) {
             return VarInstanceClient.minecraftRef.thePlayer.getLocationSkin();
         }
@@ -56,7 +65,7 @@ public class ClientRegistry {
                 data.resolving = false;
             }, "GameProfileResolverThread-" + displayName).start();
         } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
-            insert(displayName, data.id, Util.skinResourceLocation(data.profile));
+            insert(displayName, data.id, Util.skinResourceLocation(data.profile), removeAfterTTL, ttl);
         }
         return data.skinResourceLocation;
     }
@@ -67,38 +76,57 @@ public class ClientRegistry {
     }
 
     public void tick() {
-        if (!Util.onServer()) {
-            return;
-        }
         this.tickCounter++;
+
         if (this.tickCounter / 20.0 >= Config.skinTtlInterval) {
             this.tickCounter = 0;
             TabFaces.debug("Running skin TTL check (every " + Config.skinTtlInterval + " seconds)");
+
             long currentTime = System.currentTimeMillis();
-            for (Data data : playerEntities.values()) {
-                if (data.skinResourceLocation != null && (currentTime - data.timestamp > Config.skinTtl * 1000)) {
-                    TabFaces.debug("Skin too old, setting to null");
-                    data.skinResourceLocation = null;
+            Iterator<Map.Entry<String, Data>> iterator = playerEntities.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry<String, Data> entry = iterator.next();
+                Data data = entry.getValue();
+
+                long elapsedSeconds = (currentTime - data.timestamp) / 1000;
+
+                if (elapsedSeconds > data.ttl) {
+                    if (data.removeAfterTTL) {
+                        TabFaces.debug("TTL expired and removeAfterTTL is true, removing entry");
+                        iterator.remove();
+                    } else if (data.skinResourceLocation != null) {
+                        TabFaces.debug("TTL expired, clearing skinResourceLocation");
+                        data.skinResourceLocation = null;
+                    }
                 }
             }
         }
     }
 
-    private class Data {
+    public class Data {
 
         String displayName;
-        UUID id;
+        public UUID id;
         ResourceLocation skinResourceLocation;
         volatile boolean resolving = false;
         volatile GameProfile profile;
         long timestamp;
+        boolean removeAfterTTL;
+        int ttl;
 
-        Data(String displayName, UUID id, ResourceLocation skinResourceLocation) {
+        Data(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL, int ttl) {
             this.displayName = displayName;
             this.id = id;
             this.profile = null;
             this.skinResourceLocation = skinResourceLocation;
             this.timestamp = System.currentTimeMillis();
+            this.removeAfterTTL = removeAfterTTL;
+            if (ttl == -1) {
+                this.ttl = Config.skinTtl;
+            } else {
+                this.ttl = ttl;
+            }
         }
     }
 }

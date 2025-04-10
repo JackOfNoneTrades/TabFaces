@@ -1,8 +1,10 @@
 package org.fentanylsolutions.tabfaces;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.fentanylsolutions.tabfaces.event.PlayerEventHandler;
+import org.fentanylsolutions.tabfaces.util.Util;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -37,6 +39,7 @@ public class ClientProxy extends CommonProxy {
 
     // postInit "Handle interaction with other mods, complete your setup based on this."
     public void postInit(FMLPostInitializationEvent event) {
+        Util.fontRenderer = Minecraft.getMinecraft().fontRenderer;
         super.postInit(event);
     }
 

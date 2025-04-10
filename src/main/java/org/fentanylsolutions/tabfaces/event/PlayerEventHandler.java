@@ -3,6 +3,7 @@ package org.fentanylsolutions.tabfaces.event;
 import net.minecraft.server.MinecraftServer;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.lwjgl.input.Keyboard;
 
@@ -55,6 +56,8 @@ public class PlayerEventHandler {
         }
         if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && wasKeyDown) {
             TabFaces.debug("Right Key pressed.");
+            PingUtil.ServerStatusCallback callback = new PingUtil.ServerStatusCallback();
+            PingUtil.pingServer(callback);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             wasKeyDown = true;
         }

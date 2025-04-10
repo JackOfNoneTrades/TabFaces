@@ -20,7 +20,7 @@ public class UsernameUuidPairsPacket implements IMessageHandler<UsernameUuidPair
             TabFaces.debug("Received Username:UUID packet with " + message.pairs.size() + " entries");
             for (UsernameUuidPair pair : message.pairs) {
                 TabFaces.debug(" -> " + pair.username + " : " + pair.uuid);
-                TabFaces.varInstanceClient.clientRegistry.insert(pair.username, UUID.fromString(pair.uuid), null);
+                TabFaces.varInstanceClient.clientRegistry.insert(pair.username, UUID.fromString(pair.uuid), null, false, -1);
             }
         }
         return null;

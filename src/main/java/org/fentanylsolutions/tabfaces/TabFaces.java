@@ -26,7 +26,7 @@ public class TabFaces {
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     public static VarInstanceClient varInstanceClient;
-    private static boolean DEBUG_MODE;
+    public static boolean DEBUG_MODE;
     public static File confFile;
 
     @SidedProxy(

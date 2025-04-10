@@ -17,17 +17,14 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
+import org.fentanylsolutions.tabfaces.util.Util;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class GameOverlayGuiHandler extends GuiIngame {
-
-    FontRenderer fontRenderer;
-
     public GameOverlayGuiHandler(Minecraft mc) {
         super(mc);
-        fontRenderer = mc.fontRenderer;
     }
 
     @SuppressWarnings("unused")
@@ -39,10 +36,6 @@ public class GameOverlayGuiHandler extends GuiIngame {
 
         if (e.type != RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
             return;
-        }
-
-        if (fontRenderer == null) {
-            fontRenderer = Minecraft.getMinecraft().fontRenderer;
         }
 
         ScoreObjective scoreobjective = this.mc.theWorld.getScoreboard()
@@ -89,7 +82,7 @@ public class GameOverlayGuiHandler extends GuiIngame {
                     String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
 
                     ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
-                        .getTabMenuResourceLocation(player.name);
+                        .getTabMenuResourceLocation(player.name, false, -1);
 
                     if (rl != null) {
                         mc.getTextureManager()
@@ -101,19 +94,19 @@ public class GameOverlayGuiHandler extends GuiIngame {
 
                     }
 
-                    fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
+                    Util.fontRenderer.drawStringWithShadow(displayName, xPos + 10, yPos, 16777215);
 
                     if (scoreobjective != null) {
-                        int endX = xPos + fontRenderer.getStringWidth(displayName) + 5;
+                        int endX = xPos + Util.fontRenderer.getStringWidth(displayName) + 5;
                         int maxX = xPos + columnWidth - 12 - 5;
 
                         if (maxX - endX > 5) {
                             Score score = scoreobjective.getScoreboard()
                                 .func_96529_a(player.name, scoreobjective);
                             String scoreDisplay = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
-                            fontRenderer.drawStringWithShadow(
+                            Util.fontRenderer.drawStringWithShadow(
                                 scoreDisplay,
-                                maxX - fontRenderer.getStringWidth(scoreDisplay),
+                                maxX - Util.fontRenderer.getStringWidth(scoreDisplay),
                                 yPos,
                                 16777215);
                         }
@@ -137,18 +130,5 @@ public class GameOverlayGuiHandler extends GuiIngame {
                 }
             }
         }
-    }
-
-    public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, this.zLevel, (float) (u + 0) * f, (float) (v + height) * f1);
-        tessellator
-            .addVertexWithUV(x + width, y + height, this.zLevel, (float) (u + width) * f, (float) (v + height) * f1);
-        tessellator.addVertexWithUV(x + width, y + 0, this.zLevel, (float) (u + width) * f, (float) (v + 0) * f1);
-        tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, (float) (u + 0) * f, (float) (v + 0) * f1);
-        tessellator.draw();
     }
 }

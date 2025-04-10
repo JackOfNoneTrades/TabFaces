@@ -2,6 +2,7 @@ package org.fentanylsolutions.tabfaces;
 
 import net.minecraftforge.common.MinecraftForge;
 
+import org.fentanylsolutions.tabfaces.command.CommandTest;
 import org.fentanylsolutions.tabfaces.event.ServerEventHandler;
 import org.fentanylsolutions.tabfaces.packet.PacketHandler;
 import org.fentanylsolutions.tabfaces.util.Util;
@@ -40,7 +41,13 @@ public class CommonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {}
 
-    public void serverStarting(FMLServerStartingEvent event) {}
+    public void serverStarting(FMLServerStartingEvent event) {
+        if (Util.isServer()) {
+            if (TabFaces.DEBUG_MODE) {
+                event.registerServerCommand(new CommandTest());
+            }
+        }
+    }
 
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {}
 
