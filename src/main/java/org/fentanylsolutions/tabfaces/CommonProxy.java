@@ -1,13 +1,8 @@
 package org.fentanylsolutions.tabfaces;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import org.fentanylsolutions.tabfaces.command.CommandTest;
-import org.fentanylsolutions.tabfaces.event.ServerEventHandler;
-import org.fentanylsolutions.tabfaces.packet.PacketHandler;
 import org.fentanylsolutions.tabfaces.util.Util;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -26,15 +21,6 @@ public class CommonProxy {
 
         TabFaces.confFile = event.getSuggestedConfigurationFile();
         Config.synchronizeConfiguration(TabFaces.confFile);
-
-        PacketHandler.initPackets();
-        if (Util.isServer()) {
-            ServerEventHandler serverEventHandler = new ServerEventHandler();
-            MinecraftForge.EVENT_BUS.register(serverEventHandler);
-            FMLCommonHandler.instance()
-                .bus()
-                .register(serverEventHandler);
-        }
     }
 
     public void init(FMLInitializationEvent event) {}

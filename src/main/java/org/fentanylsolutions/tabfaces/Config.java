@@ -14,6 +14,8 @@ public class Config {
         public static final boolean showQuestionMarkIfUnknown = true;
         public static final int skinTtl = 120;
         public static final int skinTtlInterval = 120;
+        public static final boolean enableFacesInTabMenu = true;
+        public static final boolean enableFacesInServerMenu = true;
 
         /* common */
         public static final boolean debugMode = false;
@@ -29,6 +31,8 @@ public class Config {
     public static boolean showQuestionMarkIfUnknown = Defaults.showQuestionMarkIfUnknown;
     public static int skinTtl = Defaults.skinTtl;
     public static int skinTtlInterval = Defaults.skinTtlInterval;
+    public static boolean enableFacesInTabMenu = Defaults.enableFacesInTabMenu;
+    public static boolean enableFacesInServerMenu = Defaults.enableFacesInServerMenu;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -58,6 +62,17 @@ public class Config {
         Property debugModeProperty = configuration
             .get(Categories.common, "debugMode", Defaults.debugMode, "Enable/disable debug logs");
         debugMode = debugModeProperty.getBoolean();
+
+        enableFacesInTabMenu = configuration.getBoolean(
+            "enableFacesInTabMenu",
+            Categories.client,
+            Defaults.enableFacesInTabMenu,
+            "Add player faces to the multiplayer tab menu.");
+        enableFacesInServerMenu = configuration.getBoolean(
+            "enableFacesInServerMenu",
+            Categories.client,
+            Defaults.enableFacesInServerMenu,
+            "Add player faces to the player list in the server selection menu.");
 
         if (configuration.hasChanged()) {
             configuration.save();

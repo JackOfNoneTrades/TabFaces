@@ -21,7 +21,6 @@ public class EarlyMixinLoader implements IEarlyMixinLoader, IFMLLoadingPlugin {
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
         final List<String> mixins = new ArrayList<>();
-        //mixins.add("minecraft.IVisiblePlayerStorage");
         mixins.add("minecraft.MixinGuiMultiplayer");
         mixins.add("minecraft.MixinOldServerPingerINetHandlerStatusClient");
         mixins.add("minecraft.MixinServerData");

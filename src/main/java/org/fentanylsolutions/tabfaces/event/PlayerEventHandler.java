@@ -3,7 +3,6 @@ package org.fentanylsolutions.tabfaces.event;
 import net.minecraft.server.MinecraftServer;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.lwjgl.input.Keyboard;
 
@@ -52,22 +51,16 @@ public class PlayerEventHandler {
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            // If the Right arrow key is not pressed and we previously detected it being pressed
             if (!Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && wasKeyDown) {
                 TabFaces.debug("Right Key pressed.");
-                PingUtil.ServerStatusCallbackClientRegistry callback = new PingUtil.ServerStatusCallbackClientRegistry();
-                PingUtil.pingServer(callback);
-
-                // Reset the wasKeyDown state to prevent continuous triggering
+                // PingUtil.ServerStatusCallbackClientRegistry callback = new
+                // PingUtil.ServerStatusCallbackClientRegistry();
+                // PingUtil.pingServer(callback);
                 wasKeyDown = false;
-            }
-            // If the Right arrow key is pressed, set the wasKeyDown flag
-            else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && !wasKeyDown) {
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && !wasKeyDown) {
                 wasKeyDown = true;
             }
-        }
-        // Reset the wasKeyDown state if LShift is not pressed anymore
-        else {
+        } else {
             wasKeyDown = false;
         }
     }

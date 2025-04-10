@@ -18,6 +18,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
     version = Tags.VERSION,
     name = "TabFaces",
     acceptedMinecraftVersions = "[1.7.10]",
+    dependencies = "required-after:spongemixins",
     acceptableRemoteVersions = "*",
     guiFactory = "org.fentanylsolutions.tabfaces.gui.GuiFactory")
 public class TabFaces {

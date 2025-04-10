@@ -35,7 +35,8 @@ public class ClientRegistry {
         return playerEntities.get(displayName);
     }
 
-    public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL, int ttl) {
+    public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL,
+        int ttl) {
         TabFaces.debug(
             "Inserted " + displayName
                 + ", "
@@ -52,8 +53,9 @@ public class ClientRegistry {
 
     public ResourceLocation getTabMenuResourceLocation(String displayName, boolean removeAfterTTL, int ttl) {
         /* thePlayer is null when we're in the server selection menu */
-        if (VarInstanceClient.minecraftRef.thePlayer != null && VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
-            .equals(displayName)) {
+        if (VarInstanceClient.minecraftRef.thePlayer != null
+            && VarInstanceClient.minecraftRef.thePlayer.getDisplayName()
+                .equals(displayName)) {
             return VarInstanceClient.minecraftRef.thePlayer.getLocationSkin();
         }
         Data data = playerEntities.get(displayName);
@@ -96,7 +98,8 @@ public class ClientRegistry {
             TabFaces.debug("Running skin TTL check (every " + Config.skinTtlInterval + " seconds)");
 
             long currentTime = System.currentTimeMillis();
-            Iterator<Map.Entry<String, Data>> iterator = playerEntities.entrySet().iterator();
+            Iterator<Map.Entry<String, Data>> iterator = playerEntities.entrySet()
+                .iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry<String, Data> entry = iterator.next();

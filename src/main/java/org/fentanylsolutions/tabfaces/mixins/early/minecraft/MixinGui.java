@@ -1,12 +1,14 @@
 package org.fentanylsolutions.tabfaces.mixins.early.minecraft;
 
 import net.minecraft.client.gui.Gui;
+
 import org.fentanylsolutions.tabfaces.access.IMixinGui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Gui.class)
 public class MixinGui implements IMixinGui {
+
     @Shadow
     float zLevel;
 

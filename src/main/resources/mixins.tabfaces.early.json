@@ -1,8 +1,16 @@
 {
   "required": true,
-  "minVersion": "0.8.5-GTNH",
+  "minVersion": "0.8.7-spongemixins",
   "package": "org.fentanylsolutions.tabfaces.mixins.early",
   "refmap": "mixins.TabFaces.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "minecraft.MixinGuiMultiplayer",
+    "minecraft.MixinOldServerPingerINetHandlerStatusClient",
+    "minecraft.MixinServerData",
+    "minecraft.MixinGui",
+    "minecraft.MixinGuiScreen",
+    "minecraft.MixinServerListEntryNormal"
+  ]
 }

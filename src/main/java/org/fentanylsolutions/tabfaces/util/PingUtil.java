@@ -1,6 +1,7 @@
 package org.fentanylsolutions.tabfaces.util;
 
-import com.mojang.authlib.GameProfile;
+import java.net.InetAddress;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.NetworkManager;
@@ -13,13 +14,14 @@ import net.minecraft.network.status.server.S00PacketServerInfo;
 import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 
-import java.net.InetAddress;
-
+import com.mojang.authlib.GameProfile;
 
 public class PingUtil {
+
     public static final int DEFAULT_PORT = 25565;
 
     public static String[] parseAddress(String input) {
@@ -38,17 +40,19 @@ public class PingUtil {
             address = input;
         }
 
-        return new String[]{address, String.valueOf(port)};
+        return new String[] { address, String.valueOf(port) };
     }
 
+    /* Test callback */
     public static class ServerStatusCallback {
+
         public void onResponse(ServerStatusResponse response) {
             TabFaces.info(response.toString());
             ServerStatusResponse.PlayerCountData playerData = response.func_151318_b();
 
             if (playerData != null) {
                 int online = playerData.func_151333_b(); // Number of online players
-                int max = playerData.func_151332_a();    // Max number of players allowed
+                int max = playerData.func_151332_a(); // Max number of players allowed
 
                 TabFaces.info("Players: " + online + " / " + max);
 
@@ -72,7 +76,9 @@ public class PingUtil {
         }
     }
 
+    /* The real deal */
     public static class ServerStatusCallbackClientRegistry extends ServerStatusCallback {
+
         @Override
         public void onResponse(ServerStatusResponse response) {
             TabFaces.info(response.toString());
@@ -82,9 +88,11 @@ public class PingUtil {
                 GameProfile[] profiles = playerData.func_151331_c();
                 if (profiles != null && profiles.length > 0) {
                     for (GameProfile profile : profiles) {
-                        ClientRegistry.Data res = TabFaces.varInstanceClient.clientRegistry.getByDisplayName(profile.getName());
+                        ClientRegistry.Data res = TabFaces.varInstanceClient.clientRegistry
+                            .getByDisplayName(profile.getName());
                         if (res == null || res.id == null) {
-                            TabFaces.varInstanceClient.clientRegistry.insert(profile.getName(), profile.getId(), null, false, -1);
+                            TabFaces.varInstanceClient.clientRegistry
+                                .insert(profile.getName(), profile.getId(), null, false, -1);
                         }
                     }
                 } else {
@@ -97,15 +105,17 @@ public class PingUtil {
     }
 
     public static void pingServer(ServerStatusCallback callback) {
-        System.out.println(Minecraft.getMinecraft().func_147104_D().serverIP);
+        System.out.println(
+            Minecraft.getMinecraft()
+                .func_147104_D().serverIP);
         String[] addressPair = parseAddress(Util.minecraftInstance.func_147104_D().serverIP);
 
         try {
-            NetworkManager networkManager = NetworkManager.provideLanClient(
-                InetAddress.getByName(addressPair[0]), Integer.parseInt(addressPair[1])
-            );
+            NetworkManager networkManager = NetworkManager
+                .provideLanClient(InetAddress.getByName(addressPair[0]), Integer.parseInt(addressPair[1]));
 
             networkManager.setNetHandler(new INetHandlerStatusClient() {
+
                 private boolean receivedInfo = false;
 
                 @Override
@@ -124,18 +134,20 @@ public class PingUtil {
                 @Override
                 public void onDisconnect(IChatComponent reason) {
                     if (!receivedInfo) {
-                        callback.onFailure(new RuntimeException("Failed to ping server: " + reason.getUnformattedText()));
+                        callback
+                            .onFailure(new RuntimeException("Failed to ping server: " + reason.getUnformattedText()));
                     }
                 }
 
-                @Override public void onConnectionStateTransition(EnumConnectionState oldState, EnumConnectionState newState) {}
-                @Override public void onNetworkTick() {}
+                @Override
+                public void onConnectionStateTransition(EnumConnectionState oldState, EnumConnectionState newState) {}
+
+                @Override
+                public void onNetworkTick() {}
             });
 
-
             networkManager.scheduleOutboundPacket(
-                new C00Handshake(5, addressPair[0], Integer.parseInt(addressPair[1]), EnumConnectionState.STATUS)
-            );
+                new C00Handshake(5, addressPair[0], Integer.parseInt(addressPair[1]), EnumConnectionState.STATUS));
             networkManager.scheduleOutboundPacket(new C00PacketServerQuery());
 
         } catch (Throwable t) {

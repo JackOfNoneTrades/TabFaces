@@ -3,13 +3,11 @@ package org.fentanylsolutions.tabfaces;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -23,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class GameOverlayGuiHandler extends GuiIngame {
+
     public GameOverlayGuiHandler(Minecraft mc) {
         super(mc);
     }
@@ -30,6 +29,9 @@ public class GameOverlayGuiHandler extends GuiIngame {
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void open(RenderGameOverlayEvent.Pre e) {
+        if (!Config.enableFacesInTabMenu) {
+            return;
+        }
         if (e.type == RenderGameOverlayEvent.ElementType.PLAYER_LIST) {
             e.setCanceled(true);
         }
