@@ -49,6 +49,6 @@ public abstract class MixinOldServerPingerINetHandlerStatusClient implements INe
             ((IMixinServerData) server).setVisiblePlayers(profiles);
             ((IMixinServerData) server).sayLmao();
         }
-        TabFaces.info("BRUH");
+        TabFaces.debug("Hooked into onHandleServerInfo");
     }
 }

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.8.5-GTNH",
+  "minVersion": "0.8.7-unimixins",
   "package": "tabfaces.mixins",
   "refmap": "mixins.TabFaces.refmap.json",
   "target": "@env(DEFAULT)",
