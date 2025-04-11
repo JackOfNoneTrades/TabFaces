@@ -23,8 +23,8 @@ public class ConfigGui extends GuiConfig {
         super(
             parent,
             ImmutableList.of(ce, ceCommon),
-            "tabfaces",
-            "tabfaces",
+            TabFaces.MODID,
+            TabFaces.MODID,
             false,
             false,
             I18n.format("tabfaces.configgui.title"),

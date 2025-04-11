@@ -74,9 +74,9 @@ public class Config {
             Defaults.enableFacesInServerMenu,
             "Add player faces to the player list in the server selection menu.");
 
-        if (configuration.hasChanged()) {
+        // if (configuration.hasChanged()) {
             configuration.save();
-        }
+        // }
     }
 
     public static ConfigCategory getConfigCategoryByString(String category) {
