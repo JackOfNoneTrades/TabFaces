@@ -6,7 +6,6 @@ import net.minecraft.util.ResourceLocation;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 
 public class VarInstanceClient {
@@ -21,5 +20,4 @@ public class VarInstanceClient {
     public ResourceLocation defaultResourceLocation = new ResourceLocation(TabFaces.MODID, "textures/default.png");
     public static Minecraft minecraftRef = Minecraft.getMinecraft();
     public static MinecraftSessionService sessionService = minecraftRef.func_152347_ac();
-    public GameProfile[] gameProfiles = null;
 }

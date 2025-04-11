@@ -4,11 +4,13 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.ServerData;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiMultiplayer;
 import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -19,6 +21,9 @@ import com.mojang.authlib.GameProfile;
 public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGuiMultiplayer {
 
     public GameProfile[] visibleInfo;
+
+    @Shadow
+    ServerData field_146811_z;
 
     /**
      * Redirects the call to func_146283_a inside drawScreen to call our own method instead.
@@ -36,6 +41,11 @@ public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGui
     @Override
     public void setVisiblePlayers(GameProfile[] players) {
         visibleInfo = players;
+    }
+
+    @Override
+    public GameProfile[] getVisiblePlayers() {
+        return visibleInfo;
     }
 
     private void myCustomTooltipRenderer(List<String> lines, int mouseX, int mouseY) {

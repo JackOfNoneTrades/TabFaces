@@ -44,7 +44,13 @@ public class ClientRegistry {
                 + id.toString()
                 + ", "
                 + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
+        Data existing = getByDisplayName(displayName);
+        boolean foundSkin = false;
+        if (existing != null) {
+            foundSkin = existing.foundRealSkin;
+        }
         playerEntities.put(displayName, new Data(displayName, id, skinResourceLocation, removeAfterTTL, ttl));
+        getByDisplayName(displayName).foundRealSkin = foundSkin;
     }
 
     public void removeByDisplayName(String displayName) {
@@ -78,6 +84,12 @@ public class ClientRegistry {
             new Thread(() -> {
                 TabFaces.debug("Starting new GameProfileResolverThread");
                 data.profile = Util.getFullProfile(data.id, data.displayName);
+                TabFaces.debug("Got full profile.");
+                if (!data.profile.getProperties()
+                    .isEmpty()) {
+                    data.foundRealSkin = true;
+                    TabFaces.debug("Properties of " + data.displayName + " are not empty.");
+                }
                 data.resolving = false;
             }, "GameProfileResolverThread-" + displayName).start();
         } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
@@ -125,12 +137,13 @@ public class ClientRegistry {
 
         String displayName;
         public UUID id;
-        ResourceLocation skinResourceLocation;
+        public ResourceLocation skinResourceLocation;
         volatile boolean resolving = false;
         volatile GameProfile profile;
         long timestamp;
         boolean removeAfterTTL;
         int ttl;
+        public volatile boolean foundRealSkin;
 
         Data(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL, int ttl) {
             this.displayName = displayName;
@@ -139,6 +152,7 @@ public class ClientRegistry {
             this.skinResourceLocation = skinResourceLocation;
             this.timestamp = System.currentTimeMillis();
             this.removeAfterTTL = removeAfterTTL;
+            this.foundRealSkin = false;
             if (ttl == -1) {
                 this.ttl = Config.skinTtl;
             } else {
