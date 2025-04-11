@@ -75,7 +75,7 @@ public class Config {
             "Add player faces to the player list in the server selection menu.");
 
         // if (configuration.hasChanged()) {
-            configuration.save();
+        configuration.save();
         // }
     }
 
