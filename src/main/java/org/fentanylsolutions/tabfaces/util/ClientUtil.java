@@ -32,7 +32,7 @@ public class ClientUtil {
     public static FontRenderer fontRenderer = null;
     public static int faceWidth = 10;
     public static int serverGuiTTL = 30;
-    public static final String fakePlayerUUIDString = "feadbeef-dead-dead-dead-deadbeefdead";
+    public static final String fakePlayerUUIDString = "deadbeef-dead-dead-dead-deadbeefdead";
     public static final UUID fakePlayerUUID = UUID.fromString(fakePlayerUUIDString);
     public static final Minecraft minecraftInstance = Minecraft.getMinecraft();
 
