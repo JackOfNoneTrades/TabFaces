@@ -11,6 +11,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 
+import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 import org.lwjgl.opengl.GL11;
@@ -45,6 +46,9 @@ public class MixinGuiInGameForge {
         NetHandlerPlayClient handler, List<GuiPlayerInfo> players, int maxPlayers, int rows, int columns,
         int columnWidth, int left, byte border, int i, int xPos, int yPos, GuiPlayerInfo player, ScorePlayerTeam team,
         String displayName) {
+        if (!Config.enableFacesInTabMenu) {
+            return;
+        }
         ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
             .getTabMenuResourceLocation(player.name, false, -1);
         if (rl != null) {
