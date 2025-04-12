@@ -17,6 +17,7 @@ public class Config {
         public static final int skinTtlInterval = 120;
         public static final boolean enableFacesInTabMenu = true;
         public static final boolean enableFacesInServerMenu = true;
+        public static final boolean enableFacesInChat = true;
 
         /* common */
         public static final boolean debugMode = false;
@@ -27,6 +28,7 @@ public class Config {
         public static final String general = "general";
         public static final String tabmenu = "Tab Menu";
         public static final String servermenu = "Server Selection Menu";
+        public static final String chat = "Chat";
         public static final String debug = "Debug";
     }
 
@@ -43,6 +45,10 @@ public class Config {
     /* Server List */
     public static boolean enableFacesInServerMenu = Defaults.enableFacesInServerMenu;
     public static ConfigEntry.BoolValue enableFacesInServerMenuCE;
+
+    /* Chat */
+    public static boolean enableFacesInChat = Defaults.enableFacesInChat;
+    public static ConfigEntry.BoolValue enableFacesInChatCE;
 
     /* Debug */
     public static boolean debugMode = Defaults.debugMode;
@@ -75,6 +81,11 @@ public class Config {
             Defaults.enableFacesInServerMenu,
             "Enable player faces in the server selection menu");
 
+        /* Chat */
+        ConfigSection chatSection = conf.add(Categories.chat);
+        enableFacesInChatCE = chatSection
+            .addBool("enableFacesInChat", Defaults.enableFacesInChat, "Enable player faces in the chat");
+
         /* Debug */
         ConfigSection debugSection = conf.add(Categories.debug);
         debugModeCE = debugSection.addBool("debugMode", Defaults.debugMode);
@@ -96,6 +107,9 @@ public class Config {
 
         /* Server List */
         enableFacesInServerMenu = enableFacesInServerMenuCE.get();
+
+        /* Chat */
+        enableFacesInChat = enableFacesInChatCE.get();
 
         /* Debug */
         debugMode = debugModeCE.get();

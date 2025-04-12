@@ -3,18 +3,14 @@ package org.fentanylsolutions.tabfaces.mixins.late.minecraftforge;
 import java.util.List;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 
 import org.fentanylsolutions.tabfaces.Config;
-import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
-import org.lwjgl.opengl.GL11;
+import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+@SuppressWarnings("unused")
 @Mixin(GuiIngameForge.class)
 public class MixinGuiInGameForge {
 
@@ -49,16 +46,6 @@ public class MixinGuiInGameForge {
         if (!Config.enableFacesInTabMenu) {
             return;
         }
-        ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
-            .getTabMenuResourceLocation(player.name, false, -1);
-        if (rl != null) {
-            VarInstanceClient.minecraftRef.getTextureManager()
-                .bindTexture(rl);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            // int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float
-            // tileWidth, float tileHeight
-            Gui.func_152125_a(xPos, yPos, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
-
-        }
+        ClientUtil.drawPlayerFace(player.name, xPos, yPos, 1.0f);
     }
 }

@@ -1,7 +1,8 @@
 # TabFaces mod for Minecraft Forge 1.7.10
 
 ![screeenshot1](images/screenshot1.png) ![screeenshot2](images/screenshot2.png)
-![screeenshot2](images/screenshot3.png)
+![screeenshot3](images/screenshot3.png)
+![screeenshot4](images/screenshot4.png)
 
 ## Dependencies
 
@@ -11,7 +12,9 @@
 ## FAQ
 ### What does this mod do?
 
-It backports player faces in the tab menu. As of version 1.0.2, it also adds player faces in the server selection menu.
+* Player faces in the tab menu backport.
+* Player faces in the server selection menu (`1.0.2`).
+* Player faces in the chat (`1.0.5`).
 
 ### Client? Server? What side?
 

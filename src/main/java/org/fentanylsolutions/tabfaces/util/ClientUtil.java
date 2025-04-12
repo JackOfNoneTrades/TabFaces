@@ -7,9 +7,9 @@ import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
@@ -210,13 +210,7 @@ public class ClientUtil {
                             }
 
                             if (rl != null) {
-                                minecraftInstance.getTextureManager()
-                                    .bindTexture(rl);
-                                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                                // int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float
-                                // tileWidth, float tileHeight
-                                Gui.func_152125_a(boxOffsetX, boxOffsetY, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
-
+                                drawPlayerFace(rl, boxOffsetX, boxOffsetY, 1.0f);
                             }
                             fake = false;
                             break;
@@ -241,5 +235,37 @@ public class ClientUtil {
             RenderHelper.enableStandardItemLighting();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }
+    }
+
+    public static void drawPlayerFace(String displayName, int xPos, int yPos, float alpha) {
+        ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
+            .getTabMenuResourceLocation(displayName, false, -1);
+        if (rl != null) {
+            drawPlayerFace(rl, xPos, yPos, alpha);
+        }
+    }
+
+    public static void drawPlayerFace(ResourceLocation rl, float xPos, float yPos, float alpha) {
+        if (rl != null) {
+            VarInstanceClient.minecraftRef.getTextureManager()
+                .bindTexture(rl);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, alpha);
+            // int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float
+            // tileWidth, float tileHeight
+            drawTexFloat(xPos, yPos, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
+        }
+    }
+
+    public static void drawTexFloat(float x, float y, float u, float v, int uWidth, int vHeight, int width, int height,
+        float tileWidth, float tileHeight) {
+        float f4 = 1.0F / tileWidth;
+        float f5 = 1.0F / tileHeight;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x, y + height, 0.0D, u * f4, (v + (float) vHeight) * f5);
+        tessellator.addVertexWithUV(x + width, y + height, 0.0D, (u + (float) uWidth) * f4, (v + (float) vHeight) * f5);
+        tessellator.addVertexWithUV(x + width, y, 0.0D, (u + (float) uWidth) * f4, v * f5);
+        tessellator.addVertexWithUV(x, y, 0.0D, u * f4, v * f5);
+        tessellator.draw();
     }
 }
