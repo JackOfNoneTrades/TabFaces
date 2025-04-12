@@ -31,7 +31,7 @@ public class MixinGuiInGameForge {
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I"))
     private int shiftPlayerNameX(FontRenderer fontRenderer, String text, int x, int y, int color) {
-        return fontRenderer.drawStringWithShadow(text, x + 10, y, color);
+        return fontRenderer.drawStringWithShadow(text, x + (Config.enableFacesInTabMenu ? 10 : 0), y, color);
     }
 
     @SuppressWarnings("unused")
