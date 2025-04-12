@@ -5,7 +5,8 @@
 
 ## Dependencies
 
-As of version 1.0.2, [UniMixins](https://github.com/LegacyModdingMC/UniMixins) is a required dependency.
+* As of version 1.0.2, [UniMixins](https://modrinth.com/mod/unimixins) is a required dependency.
+* As of version 1.0.4, [CarbonConfig](https://modrinth.com/mod/carbon-config) is a required dependency.
 
 ## FAQ
 ### What does this mod do?

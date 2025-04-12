@@ -35,6 +35,7 @@ public class ClientProxy extends CommonProxy {
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes."
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        Config.registerConfig();
     }
 
     // postInit "Handle interaction with other mods, complete your setup based on this."

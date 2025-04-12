@@ -1,7 +1,5 @@
 package org.fentanylsolutions.tabfaces;
 
-import java.io.File;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
@@ -12,15 +10,17 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 @Mod(
     modid = TabFaces.MODID,
     version = Tags.VERSION,
     name = "TabFaces",
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:unimixins",
-    acceptableRemoteVersions = "*",
-    guiFactory = "org.fentanylsolutions.tabfaces.gui.GuiFactory")
+    dependencies = "required-after:unimixins;required-after:carbonconfig",
+    acceptableRemoteVersions = "*")
 public class TabFaces {
 
     public static final String MODID = "tabfaces";
@@ -28,7 +28,6 @@ public class TabFaces {
 
     public static VarInstanceClient varInstanceClient;
     public static boolean DEBUG_MODE;
-    public static File confFile;
 
     @SidedProxy(
         clientSide = "org.fentanylsolutions.tabfaces.ClientProxy",

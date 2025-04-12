@@ -19,8 +19,9 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         TabFaces.info("TabFaces version " + Tags.VERSION + " running on " + (Util.isServer() ? "Server" : "Client"));
 
-        TabFaces.confFile = event.getSuggestedConfigurationFile();
-        Config.synchronizeConfiguration(TabFaces.confFile);
+        // TabFaces.confFile = event.getSuggestedConfigurationFile();
+        // TabFaces.configuration = new Configuration(TabFaces.confFile);
+        // Config.synchronizeConfiguration(TabFaces.confFile);
     }
 
     public void init(FMLInitializationEvent event) {}

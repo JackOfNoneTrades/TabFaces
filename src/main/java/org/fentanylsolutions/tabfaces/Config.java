@@ -1,12 +1,13 @@
 package org.fentanylsolutions.tabfaces;
 
-import java.io.File;
-
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import carbonconfiglib.CarbonConfig;
+import carbonconfiglib.config.ConfigEntry;
+import carbonconfiglib.config.ConfigHandler;
+import carbonconfiglib.config.ConfigSection;
 
 public class Config {
+
+    public static ConfigHandler config;
 
     private static class Defaults {
 
@@ -23,63 +24,80 @@ public class Config {
 
     public static class Categories {
 
-        public static final String client = "client";
-        public static final String common = "common";
+        public static final String general = "general";
+        public static final String tabmenu = "Tab Menu";
+        public static final String servermenu = "Server Selection Menu";
+        public static final String debug = "Debug";
     }
 
-    public static boolean debugMode = Defaults.debugMode;
-    public static boolean showQuestionMarkIfUnknown = Defaults.showQuestionMarkIfUnknown;
-    public static int skinTtl = Defaults.skinTtl;
-    public static int skinTtlInterval = Defaults.skinTtlInterval;
+    /* Tab */
     public static boolean enableFacesInTabMenu = Defaults.enableFacesInTabMenu;
+    public static ConfigEntry.BoolValue enableFacesInTabMenuCE;
+    public static boolean showQuestionMarkIfUnknown = Defaults.showQuestionMarkIfUnknown;
+    public static ConfigEntry.BoolValue showQuestionMarkIfUnknownCE;
+    public static int skinTtl = Defaults.skinTtl;
+    public static ConfigEntry.IntValue skinTtlCE;
+    public static int skinTtlInterval = Defaults.skinTtlInterval;
+    public static ConfigEntry.IntValue skinTtlIntervalCE;
+
+    /* Server List */
     public static boolean enableFacesInServerMenu = Defaults.enableFacesInServerMenu;
+    public static ConfigEntry.BoolValue enableFacesInServerMenuCE;
 
-    public static void synchronizeConfiguration(File configFile) {
-        Configuration configuration = new Configuration(configFile);
+    /* Debug */
+    public static boolean debugMode = Defaults.debugMode;
+    public static ConfigEntry.BoolValue debugModeCE;
 
-        Property showQuestionMarkIfUnknownProperty = configuration.get(
-            Categories.client,
+    public static void registerConfig() {
+        carbonconfiglib.config.Config conf = new carbonconfiglib.config.Config(TabFaces.MODID);
+
+        /* Tab */
+        ConfigSection tabmenuSection = conf.add(Categories.tabmenu);
+        enableFacesInTabMenuCE = tabmenuSection.addBool(
+            "enableFacesInTabMenu",
+            Defaults.enableFacesInTabMenu,
+            "Enable player faces in the server tab menu");
+        showQuestionMarkIfUnknownCE = tabmenuSection.addBool(
             "showQuestionMarkIfUnknown",
             Defaults.showQuestionMarkIfUnknown,
-            "Should show question mark if player skin unknown? Otherwise shows steve's face.");
-        showQuestionMarkIfUnknown = showQuestionMarkIfUnknownProperty.getBoolean();
-
-        skinTtl = configuration.getInt(
-            "skinTtl",
-            Categories.client,
-            Defaults.skinTtl,
-            15,
-            Integer.MAX_VALUE,
-            "Skin resource refresh time in seconds.");
-        skinTtlInterval = configuration.getInt(
+            "Show a question mark texture instead of Steve when a skin cannot be loaded");
+        skinTtlCE = tabmenuSection
+            .addInt("skinTtl", Defaults.skinTtl, "How many seconds elapse before a skin is refreshed");
+        skinTtlIntervalCE = tabmenuSection.addInt(
             "skinTtlInterval",
-            Categories.client,
             Defaults.skinTtlInterval,
-            15,
-            Integer.MAX_VALUE,
-            "How often should the skin cache invalidator run in seconds.");
+            "Interval in seconds at which the skin garbage collection runs");
 
-        Property debugModeProperty = configuration
-            .get(Categories.common, "debugMode", Defaults.debugMode, "Enable/disable debug logs");
-        debugMode = debugModeProperty.getBoolean();
-
-        enableFacesInTabMenu = configuration.getBoolean(
-            "enableFacesInTabMenu",
-            Categories.client,
-            Defaults.enableFacesInTabMenu,
-            "Add player faces to the multiplayer tab menu.");
-        enableFacesInServerMenu = configuration.getBoolean(
+        /* Server List */
+        ConfigSection servermenuSection = conf.add(Categories.servermenu);
+        enableFacesInServerMenuCE = servermenuSection.addBool(
             "enableFacesInServerMenu",
-            Categories.client,
             Defaults.enableFacesInServerMenu,
-            "Add player faces to the player list in the server selection menu.");
+            "Enable player faces in the server selection menu");
 
-        // if (configuration.hasChanged()) {
-        configuration.save();
-        // }
+        /* Debug */
+        ConfigSection debugSection = conf.add(Categories.debug);
+        debugModeCE = debugSection.addBool("debugMode", Defaults.debugMode);
+
+        config = CarbonConfig.CONFIGS.createConfig(conf);
+        config.addLoadedListener(() -> {
+            TabFaces.debug("Carbon config callback, dumping vars.");
+            dumpConf();
+        });
+        config.register();
     }
 
-    public static ConfigCategory getConfigCategoryByString(String category) {
-        return (new Configuration(TabFaces.confFile).getCategory(category));
+    private static void dumpConf() {
+        /* Tab */
+        enableFacesInTabMenu = enableFacesInTabMenuCE.get();
+        showQuestionMarkIfUnknown = showQuestionMarkIfUnknownCE.get();
+        skinTtl = skinTtlCE.get();
+        skinTtlInterval = skinTtlIntervalCE.get();
+
+        /* Server List */
+        enableFacesInServerMenu = enableFacesInServerMenuCE.get();
+
+        /* Debug */
+        debugMode = debugModeCE.get();
     }
 }

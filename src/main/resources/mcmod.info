@@ -11,6 +11,6 @@
       "credits": "",
       "logoFile": "assets/${modId}/logo.png",
       "screenshots": [],
-      "dependencies": []
+      "dependencies": ["unimixins", "carbonconfig"]
     }
 ]
