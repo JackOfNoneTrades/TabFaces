@@ -18,6 +18,7 @@ public class Config {
         public static final boolean enableFacesInTabMenu = true;
         public static final boolean enableFacesInServerMenu = true;
         public static final boolean enableFacesInChat = true;
+        public static final boolean trimTabMenu = true;
 
         /* common */
         public static final boolean debugMode = false;
@@ -37,6 +38,8 @@ public class Config {
     public static ConfigEntry.BoolValue enableFacesInTabMenuCE;
     public static boolean showQuestionMarkIfUnknown = Defaults.showQuestionMarkIfUnknown;
     public static ConfigEntry.BoolValue showQuestionMarkIfUnknownCE;
+    public static boolean trimTabMenu = Defaults.trimTabMenu;
+    public static ConfigEntry.BoolValue trimTabMenuCE;
     public static int skinTtl = Defaults.skinTtl;
     public static ConfigEntry.IntValue skinTtlCE;
     public static int skinTtlInterval = Defaults.skinTtlInterval;
@@ -67,6 +70,8 @@ public class Config {
             "showQuestionMarkIfUnknown",
             Defaults.showQuestionMarkIfUnknown,
             "Show a question mark texture instead of Steve when a skin cannot be loaded");
+        trimTabMenuCE = tabmenuSection
+            .addBool("trimTabMenu", Defaults.trimTabMenu, "Display only as much rows as there are connected players");
         skinTtlCE = tabmenuSection
             .addInt("skinTtl", Defaults.skinTtl, "How many seconds elapse before a skin is refreshed");
         skinTtlIntervalCE = tabmenuSection.addInt(
@@ -102,6 +107,7 @@ public class Config {
         /* Tab */
         enableFacesInTabMenu = enableFacesInTabMenuCE.get();
         showQuestionMarkIfUnknown = showQuestionMarkIfUnknownCE.get();
+        trimTabMenu = trimTabMenuCE.get();
         skinTtl = skinTtlCE.get();
         skinTtlInterval = skinTtlIntervalCE.get();
 

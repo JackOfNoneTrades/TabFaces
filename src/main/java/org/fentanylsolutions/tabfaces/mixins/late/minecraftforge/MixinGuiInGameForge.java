@@ -14,9 +14,12 @@ import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import com.llamalad7.mixinextras.sugar.Local;
 
 @SuppressWarnings("unused")
 @Mixin(GuiIngameForge.class)
@@ -48,4 +51,22 @@ public class MixinGuiInGameForge {
         }
         ClientUtil.drawPlayerFace(player.name, xPos, yPos, 1.0f);
     }
+
+    @ModifyVariable(remap = false, method = "renderPlayerList", at = @At("STORE"), ordinal = 2)
+    private int injectedMaxPlayers(int maxPlayers, @Local NetHandlerPlayClient handler) {
+        /* Adding fake players for debugging */
+        /*
+         * List<net.minecraft.client.gui.GuiPlayerInfo> newPlayerInfoList = new ArrayList();
+         * for (int i = 0; i < 21; i++) {
+         * newPlayerInfoList.add(handler.playerInfoList.get(0));
+         * }
+         * handler.playerInfoList = newPlayerInfoList;
+         */
+        if (Config.trimTabMenu) {
+            return handler.playerInfoList.size();
+        } else {
+            return maxPlayers;
+        }
+    }
+
 }
