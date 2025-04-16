@@ -22,7 +22,6 @@ import acs.tabbychat.core.TCChatLine;
 public abstract class MixinGuiNewChatTC {
 
     @ModifyArg(
-        remap = false,
         method = "drawChat",
         at = @At(
             value = "INVOKE",
@@ -34,7 +33,7 @@ public abstract class MixinGuiNewChatTC {
         List<IChatComponent> siblings = msgList.get(i)
             .getChatComponent()
             .getSiblings();
-        if (Config.enableFacesInChat) {
+        if (Config.enableFacesInTabbyChat) {
             if (siblings.size() > 2) {
                 if (siblings.get(0)
                     .getUnformattedText()

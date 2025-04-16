@@ -18,6 +18,7 @@ public class Config {
         public static final boolean enableFacesInTabMenu = true;
         public static final boolean enableFacesInServerMenu = true;
         public static final boolean enableFacesInChat = true;
+        public static final boolean enableFacesInTabbyChat = true;
         public static final boolean trimTabMenu = true;
 
         /* common */
@@ -52,6 +53,8 @@ public class Config {
     /* Chat */
     public static boolean enableFacesInChat = Defaults.enableFacesInChat;
     public static ConfigEntry.BoolValue enableFacesInChatCE;
+    public static boolean enableFacesInTabbyChat = Defaults.enableFacesInTabbyChat;
+    public static ConfigEntry.BoolValue enableFacesInTabbyChatCE;
 
     /* Debug */
     public static boolean debugMode = Defaults.debugMode;
@@ -90,6 +93,8 @@ public class Config {
         ConfigSection chatSection = conf.add(Categories.chat);
         enableFacesInChatCE = chatSection
             .addBool("enableFacesInChat", Defaults.enableFacesInChat, "Enable player faces in the chat");
+        enableFacesInTabbyChatCE = chatSection
+            .addBool("enableFacesInTabbyChat", Defaults.enableFacesInTabbyChat, "Enable player faces in Tabby Chat");
 
         /* Debug */
         ConfigSection debugSection = conf.add(Categories.debug);
@@ -116,6 +121,7 @@ public class Config {
 
         /* Chat */
         enableFacesInChat = enableFacesInChatCE.get();
+        enableFacesInTabbyChat = enableFacesInTabbyChatCE.get();
 
         /* Debug */
         debugMode = debugModeCE.get();

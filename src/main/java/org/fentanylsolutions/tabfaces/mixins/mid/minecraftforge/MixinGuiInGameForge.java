@@ -1,4 +1,4 @@
-package org.fentanylsolutions.tabfaces.mixins.late.minecraftforge;
+package org.fentanylsolutions.tabfaces.mixins.mid.minecraftforge;
 
 import java.util.List;
 

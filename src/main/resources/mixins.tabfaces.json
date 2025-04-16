@@ -1,8 +1,11 @@
 {
   "required": true,
-  "minVersion": "0.8.7-unimixins",
-  "package": "org.fentanylsolutions.tabfaces.mixins",
+  "minVersion": "0.8.7-GTNH",
+  "package": "org.fentanylsolutions.tabfaces.mixins.mid",
   "refmap": "mixins.tabfaces.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8"
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "minecraftforge.MixinGuiInGameForge"
+  ]
 }
