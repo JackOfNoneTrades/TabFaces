@@ -16,7 +16,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
     version = Tags.VERSION,
     name = "TabFaces",
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:unimixins;required-after:carbonconfig",
+    dependencies = "required-after:unimixins;required-after:carbonconfig;after:tabbychat",
     acceptableRemoteVersions = "*")
 public class TabFaces {
 

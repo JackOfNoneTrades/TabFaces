@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8.7-unimixins",
+  "package": "org.fentanylsolutions.tabfaces.mixins.late",
+  "refmap": "mixins.tabfaces.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "client" : [
+    "minecraftforge.MixinGuiInGameForge",
+    "tabbychat.MixinGuiNewChatTC"
+  ]
+}
