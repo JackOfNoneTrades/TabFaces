@@ -9,6 +9,7 @@ import net.minecraft.util.IChatComponent;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.access.IMixinServerData;
 import org.fentanylsolutions.tabfaces.util.PingHandlerContext;
+import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,10 +24,26 @@ public abstract class MixinOldServerPingerINetHandlerStatusClient implements INe
 
     @Inject(method = "handleServerInfo", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onServerInfo(S00PacketServerInfo packet, CallbackInfo ci, ServerStatusResponse response) {
-        if (response == null || response.func_151318_b() == null) return;
+        TabFaces.debug(
+            "Got server info response " + (response != null ? response.func_151317_a()
+                .getUnformattedText() : "null"));
+        if (response == null) {
+            return;
+        }
+
+        if (response.func_151318_b() == null) {
+            TabFaces.debug("No player profiles (func_151318_b), pinging again");
+            PingUtil.pingServer(null);
+        }
 
         GameProfile[] profiles = response.func_151318_b()
             .func_151331_c();
+
+        if (profiles == null) {
+            TabFaces.debug("No player profiles (func_151331_c), pinging again");
+            PingUtil.pingServer(null);
+        }
+
         if (profiles != null) {
             TabFaces.debug("GOT PROFILES");
             for (GameProfile gameprofile : profiles) {

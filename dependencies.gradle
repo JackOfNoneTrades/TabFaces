@@ -36,5 +36,5 @@
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev")
     api("maven.modrinth:carbon-config:ttXTOUmO")
-    api(rfg.deobf("maven.modrinth:tabbychat-unofficial:FgpPdGV9"))
+    compileOnly(rfg.deobf("maven.modrinth:tabbychat-unofficial:FgpPdGV9"))
 }

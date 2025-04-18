@@ -105,9 +105,6 @@ public class PingUtil {
     }
 
     public static void pingServer(ServerStatusCallback callback) {
-        System.out.println(
-            Minecraft.getMinecraft()
-                .func_147104_D().serverIP);
         String[] addressPair = parseAddress(ClientUtil.minecraftInstance.func_147104_D().serverIP);
 
         try {
@@ -122,7 +119,9 @@ public class PingUtil {
                 public void handleServerInfo(S00PacketServerInfo packetIn) {
                     receivedInfo = true;
                     ServerStatusResponse response = packetIn.func_149294_c();
-                    callback.onResponse(response);
+                    if (callback != null) {
+                        callback.onResponse(response);
+                    }
                     networkManager.scheduleOutboundPacket(new C01PacketPing(Minecraft.getSystemTime()));
                 }
 
@@ -134,8 +133,10 @@ public class PingUtil {
                 @Override
                 public void onDisconnect(IChatComponent reason) {
                     if (!receivedInfo) {
-                        callback
-                            .onFailure(new RuntimeException("Failed to ping server: " + reason.getUnformattedText()));
+                        if (callback != null) {
+                            callback.onFailure(
+                                new RuntimeException("Failed to ping server: " + reason.getUnformattedText()));
+                        }
                     }
                 }
 
@@ -151,7 +152,10 @@ public class PingUtil {
             networkManager.scheduleOutboundPacket(new C00PacketServerQuery());
 
         } catch (Throwable t) {
-            callback.onFailure(t);
+            if (callback != null) {
+                callback.onFailure(t);
+            }
+            TabFaces.error(t.getMessage());
         }
     }
 }

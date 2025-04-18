@@ -1,6 +1,6 @@
 # TabFaces mod for Minecraft Forge 1.7.10
 
-![screeenshot1](images/screenshot1.png) ![screeenshot2](images/screenshot2.png)
+![screeenshot1](images/screenshot1.png)
 ![screeenshot3](images/screenshot3.png)
 ![screeenshot4](images/screenshot4.png)
 

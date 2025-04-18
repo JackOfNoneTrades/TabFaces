@@ -15,22 +15,21 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
 @SuppressWarnings("unused")
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat {
-
-    ChatLine currentChatLine;
-    int currentI2;
 
     @Inject(
         method = "drawChat(I)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I"))
-    private void captureChatLine(CallbackInfo ci, @Local ChatLine chatLine, @Local(ordinal = 8) int i2) {
-        currentChatLine = chatLine;
-        currentI2 = i2;
+    private void captureChatLine(CallbackInfo ci, @Local ChatLine chatLine,
+        @Share("chatLine") LocalRef<ChatLine> chatLineRef) {
+        chatLineRef.set(chatLine);
     }
 
     @Redirect(
@@ -38,7 +37,9 @@ public abstract class MixinGuiNewChat {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I"))
-    private int redirectDrawStringWithShadow(FontRenderer fontRenderer, String text, int x, int y, int color) {
+    private int redirectDrawStringWithShadow(FontRenderer fontRenderer, String text, int x, int y, int color,
+        @Share("chatLine") LocalRef<ChatLine> chatLineRef) {
+        ChatLine currentChatLine = chatLineRef.get();
 
         if (Config.enableFacesInChat && currentChatLine != null) {
             if (currentChatLine.func_151461_a()
