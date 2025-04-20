@@ -12,7 +12,6 @@
     "minecraft.MixinGuiScreen",
     "minecraft.MixinServerListEntryNormal",
     "minecraft.MixinOldServerPinger",
-    "minecraft.MixinServerData",
     "minecraft.MixinGuiNewChat",
     "minecraft.MixinChatLine"
   ]

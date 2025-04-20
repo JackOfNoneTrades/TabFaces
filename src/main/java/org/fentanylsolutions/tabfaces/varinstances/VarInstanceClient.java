@@ -5,12 +5,14 @@ import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
+import org.fentanylsolutions.tabfaces.registries.ServerDataRegistry;
 
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 
 public class VarInstanceClient {
 
     public ClientRegistry clientRegistry = new ClientRegistry();
+    public ServerDataRegistry serverDataRegistry = new ServerDataRegistry();
     /*
      * public int u = 0;
      * public int v = 0;

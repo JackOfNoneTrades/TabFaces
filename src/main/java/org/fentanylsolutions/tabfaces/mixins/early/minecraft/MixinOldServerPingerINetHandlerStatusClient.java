@@ -1,67 +1,65 @@
 package org.fentanylsolutions.tabfaces.mixins.early.minecraft;
 
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.network.ServerStatusResponse;
 import net.minecraft.network.status.INetHandlerStatusClient;
 import net.minecraft.network.status.server.S00PacketServerInfo;
-import net.minecraft.util.IChatComponent;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.access.IMixinServerData;
-import org.fentanylsolutions.tabfaces.util.PingHandlerContext;
-import org.fentanylsolutions.tabfaces.util.PingUtil;
+import org.fentanylsolutions.tabfaces.access.IMixinOldServerPinger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.authlib.GameProfile;
 
 @SuppressWarnings("unused")
 @Mixin(targets = "net.minecraft.client.network.OldServerPinger$1")
 public abstract class MixinOldServerPingerINetHandlerStatusClient implements INetHandlerStatusClient {
 
+    @Shadow(remap = false)
+    @Final
+    OldServerPinger this$0;
+
     @Inject(method = "handleServerInfo", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void onServerInfo(S00PacketServerInfo packet, CallbackInfo ci, ServerStatusResponse response) {
+    private void onServerInfo(S00PacketServerInfo packet, CallbackInfo ci, ServerStatusResponse response,
+        @Share("servershare") LocalRef<ServerData> serverDataLocalRef) {
         TabFaces.debug(
             "Got server info response " + (response != null ? response.func_151317_a()
                 .getUnformattedText() : "null"));
+        TabFaces.debug(this$0.toString());
         if (response == null) {
             return;
-        }
-
-        if (response.func_151318_b() == null) {
-            TabFaces.debug("No player profiles (func_151318_b), pinging again");
-            PingUtil.pingServer(null);
         }
 
         GameProfile[] profiles = response.func_151318_b()
             .func_151331_c();
 
-        if (profiles == null) {
-            TabFaces.debug("No player profiles (func_151331_c), pinging again");
-            PingUtil.pingServer(null);
-        }
-
         if (profiles != null) {
-            TabFaces.debug("GOT PROFILES");
+            TabFaces.debug("GOT PROFILES (" + profiles.length + ")");
             for (GameProfile gameprofile : profiles) {
-                TabFaces.debug(gameprofile.getName() + ":" + gameprofile.getId());
+                // TabFaces.debug(gameprofile.getName() + ":" + gameprofile.getId());
             }
 
-            ServerData serverData = PingHandlerContext.get(this);
-            if (serverData != null) {
-                ((IMixinServerData) serverData).setProfiles(profiles);
-                TabFaces.debug("Associated server " + serverData.serverIP + " with profiles of len " + profiles.length);
+            System.out.println();
+
+            String ip = ((IMixinOldServerPinger) this$0).getIp();
+            if (ip != null) {
+                TabFaces.varInstanceClient.serverDataRegistry.setProfiles(ip, profiles.clone());
+            } else {
+                TabFaces.error("IP is null");
             }
+        } else {
+            TabFaces.error("Didn't get any profiles");
         }
 
         TabFaces.debug("Hooked into onHandleServerInfo");
-    }
-
-    @Inject(method = "onDisconnect", at = @At("HEAD"))
-    private void onDisconnect(IChatComponent reason, CallbackInfo ci) {
-        PingHandlerContext.remove(this);
     }
 }
