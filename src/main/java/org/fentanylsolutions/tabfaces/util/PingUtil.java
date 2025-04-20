@@ -66,7 +66,7 @@ public class PingUtil {
                     TabFaces.info("No player sample provided by server.");
                 }
             } else {
-                System.out.println("No player data in server response.");
+                TabFaces.warn("No player data in server response.");
             }
         }
 

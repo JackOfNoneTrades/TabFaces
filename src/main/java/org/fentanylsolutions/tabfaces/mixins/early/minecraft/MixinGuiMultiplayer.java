@@ -1,11 +1,13 @@
 package org.fentanylsolutions.tabfaces.mixins.early.minecraft;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.fentanylsolutions.tabfaces.Config;
+import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiMultiplayer;
 import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,7 +47,17 @@ public abstract class MixinGuiMultiplayer extends GuiScreen implements IMixinGui
 
     private void myCustomTooltipRenderer(List<String> lines, int mouseX, int mouseY) {
         if (Config.enableFacesInServerMenu) {
-            ClientUtil.drawHoveringTextWithFaces(this, visibleInfo, lines, mouseX, mouseY);
+            List<GameProfile> profileList = new ArrayList<>();
+
+            for (String line : lines) {
+                if (TabFaces.varInstanceClient.playerProfileRegistry.hasProfile(line)) {
+                    GameProfile profile = TabFaces.varInstanceClient.playerProfileRegistry.getProfile(line);
+                    profileList.add(profile);
+                }
+            }
+
+            GameProfile[] profiles = profileList.toArray(new GameProfile[0]);
+            ClientUtil.drawHoveringTextWithFaces(this, profiles, lines, mouseX, mouseY);
         } else {
             this.drawHoveringText(lines, mouseX, mouseY, this.fontRendererObj);
         }

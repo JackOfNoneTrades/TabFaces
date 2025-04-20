@@ -10,8 +10,6 @@
     "minecraft.MixinOldServerPingerINetHandlerStatusClient",
     "minecraft.MixinGui",
     "minecraft.MixinGuiScreen",
-    "minecraft.MixinServerListEntryNormal",
-    "minecraft.MixinOldServerPinger",
     "minecraft.MixinGuiNewChat",
     "minecraft.MixinChatLine"
   ]
