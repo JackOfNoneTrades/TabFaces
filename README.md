@@ -5,10 +5,9 @@
 ![screeenshot4](images/screenshot4.png)
 
 ## Downloads
-| [CurseForge ![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/tabfaces) |
-| ---------- |
-| [Modrinth ![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/tabfaces)   |
-| [Git ![git](images/icons/git.png)](https://github.com/JackOfNoneTrades/TabFaces/releases)        |
+* [CurseForge ![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/tabfaces)
+* [Modrinth ![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/tabfaces)
+* [Git ![git](images/icons/git.png)](https://github.com/JackOfNoneTrades/TabFaces/releases)
 
 ## Dependencies
 

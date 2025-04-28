@@ -29,7 +29,7 @@ public class PingUtil {
         int port = DEFAULT_PORT;
 
         if (input.contains(":")) {
-            String[] parts = input.split(":", 2); // split only on the first colon
+            String[] parts = input.split(":", 2);
             address = parts[0];
             try {
                 port = Integer.parseInt(parts[1]);
@@ -43,7 +43,6 @@ public class PingUtil {
         return new String[] { address, String.valueOf(port) };
     }
 
-    /* Test callback */
     public static class ServerStatusCallback {
 
         public void onResponse(ServerStatusResponse response) {
@@ -51,12 +50,12 @@ public class PingUtil {
             ServerStatusResponse.PlayerCountData playerData = response.func_151318_b();
 
             if (playerData != null) {
-                int online = playerData.func_151333_b(); // Number of online players
-                int max = playerData.func_151332_a(); // Max number of players allowed
+                int online = playerData.func_151333_b();
+                int max = playerData.func_151332_a();
 
                 TabFaces.info("Players: " + online + " / " + max);
 
-                GameProfile[] sample = playerData.func_151331_c(); // Sample list of players
+                GameProfile[] sample = playerData.func_151331_c();
                 if (sample != null && sample.length > 0) {
                     TabFaces.info("Sampled Players:");
                     for (GameProfile profile : sample) {
