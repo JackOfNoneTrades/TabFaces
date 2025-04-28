@@ -11,13 +11,12 @@ import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.llamalad7.mixinextras.sugar.Local;
 
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 
 @SuppressWarnings("unused")
 @Mixin(GuiNewChatTC.class)
@@ -27,14 +26,10 @@ public abstract class MixinGuiNewChatTC {
         method = "drawChat",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I"
-        )
-    )
+            target = "Lnet/minecraft/client/gui/FontRenderer;drawStringWithShadow(Ljava/lang/String;III)I"))
     private int injectedDrawStringWithFace(FontRenderer fontRenderer, String text, int x, int y, int color,
-                                           @Local List<TCChatLine> msgList,
-                                           @Local(ordinal = 7) int i,
-                                           @Local(ordinal = 11) int textOpacity,
-                                           @Local(ordinal = 8) int yOrigin) {
+        @Local List<TCChatLine> msgList, @Local(ordinal = 7) int i, @Local(ordinal = 11) int textOpacity,
+        @Local(ordinal = 8) int yOrigin) {
 
         List<IChatComponent> siblings = msgList.get(i)
             .getChatComponent()
@@ -45,17 +40,23 @@ public abstract class MixinGuiNewChatTC {
         }
 
         for (int s = 0; s < siblings.size() - 2; ++s) {
-            if (siblings.get(s).getUnformattedText().equals("<")
-                && siblings.get(s + 2).getUnformattedText().equals("> ")) {
+            if (siblings.get(s)
+                .getUnformattedText()
+                .equals("<")
+                && siblings.get(s + 2)
+                    .getUnformattedText()
+                    .equals("> ")) {
 
                 String prefix = "";
                 for (int j = 0; j < s; ++j) {
-                    prefix += siblings.get(j).getFormattedText();
+                    prefix += siblings.get(j)
+                        .getFormattedText();
                 }
 
                 String nameAndRest = "";
                 for (int j = s; j < siblings.size(); ++j) {
-                    nameAndRest += siblings.get(j).getFormattedText();
+                    nameAndRest += siblings.get(j)
+                        .getFormattedText();
                 }
 
                 int xCursor = x;
@@ -64,10 +65,10 @@ public abstract class MixinGuiNewChatTC {
                 }
 
                 ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(
-                    siblings.get(s + 1).getUnformattedText(),
+                    siblings.get(s + 1)
+                        .getUnformattedText(),
                     false,
-                    -1
-                );
+                    -1);
 
                 if (rl != null) {
                     float alpha = (float) textOpacity / 255.0F;

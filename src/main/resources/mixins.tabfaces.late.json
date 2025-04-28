@@ -4,8 +4,5 @@
   "package": "org.fentanylsolutions.tabfaces.mixins.late",
   "refmap": "mixins.tabfaces.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8",
-  "client" : [
-    "tabbychat.MixinGuiNewChatTC"
-  ]
+  "compatibilityLevel": "JAVA_8"
 }
