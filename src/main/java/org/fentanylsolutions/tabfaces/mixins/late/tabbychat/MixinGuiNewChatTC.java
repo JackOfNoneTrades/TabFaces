@@ -72,8 +72,8 @@ public abstract class MixinGuiNewChatTC {
 
                 if (rl != null) {
                     float alpha = (float) textOpacity / 255.0F;
-                    ClientUtil.drawPlayerFace(rl, xCursor, yOrigin + 0.5f, alpha);
-                    xCursor += 11;
+                    ClientUtil.drawPlayerFace(rl, xCursor + Config.faceXOffsetTabbyChat, yOrigin + 0.5f, alpha);
+                    xCursor += (int) (10 + Config.faceXOffsetTabbyChat);
                 }
 
                 return fontRenderer.drawStringWithShadow(nameAndRest, xCursor, y, color);

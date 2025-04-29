@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.fentanylsolutions.tabfaces.util.Util;
+
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 
@@ -23,9 +25,10 @@ public class LateMixinLoader implements ILateMixinLoader {
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
         final List<String> mixins = new ArrayList<>();
-        if (Loader.isModLoaded("tabbychat")) {
+        if (Loader.isModLoaded("tabbychat") && !Util.isServer()) {
             mixins.add("tabbychat.MixinGuiNewChatTC");
             mixins.add("tabbychat.MixinTabbyChat");
+            mixins.add("tabbychat.MixinTCSettingSlider");
         }
         return mixins;
     }

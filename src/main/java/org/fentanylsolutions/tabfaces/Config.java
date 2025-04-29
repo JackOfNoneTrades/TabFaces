@@ -20,6 +20,8 @@ public class Config {
         public static final boolean enableFacesInChat = true;
         public static final boolean enableFacesInTabbyChat = true;
         public static final boolean trimTabMenu = true;
+        public static final float faceXOffset = 1.0f;
+        public static final float faceXOffsetTabbyChat = 1.0f;
 
         /* common */
         public static final boolean debugMode = false;
@@ -55,6 +57,10 @@ public class Config {
     public static ConfigEntry.BoolValue enableFacesInChatCE;
     public static boolean enableFacesInTabbyChat = Defaults.enableFacesInTabbyChat;
     public static ConfigEntry.BoolValue enableFacesInTabbyChatCE;
+    public static float faceXOffset = Defaults.faceXOffset;
+    public static ConfigEntry.DoubleValue faceXOffsetCE;
+    public static float faceXOffsetTabbyChat = Defaults.faceXOffset;
+    public static ConfigEntry.DoubleValue faceXOffsetTabbyChatCE;
 
     /* Debug */
     public static boolean debugMode = Defaults.debugMode;
@@ -95,6 +101,9 @@ public class Config {
             .addBool("enableFacesInChat", Defaults.enableFacesInChat, "Enable player faces in the chat");
         enableFacesInTabbyChatCE = chatSection
             .addBool("enableFacesInTabbyChat", Defaults.enableFacesInTabbyChat, "Enable player faces in Tabby Chat");
+        faceXOffsetCE = chatSection.addDouble("faceXOffset", Defaults.faceXOffset, "Face x offset");
+        faceXOffsetTabbyChatCE = chatSection
+            .addDouble("faceXOffsetTabbyChat", Defaults.faceXOffsetTabbyChat, "Face x offset (TabbyChat)");
 
         /* Debug */
         ConfigSection debugSection = conf.add(Categories.debug);
@@ -122,6 +131,8 @@ public class Config {
         /* Chat */
         enableFacesInChat = enableFacesInChatCE.get();
         enableFacesInTabbyChat = enableFacesInTabbyChatCE.get();
+        faceXOffset = (float) faceXOffsetCE.get();
+        faceXOffsetTabbyChat = (float) faceXOffsetTabbyChatCE.get();
 
         /* Debug */
         debugMode = debugModeCE.get();
