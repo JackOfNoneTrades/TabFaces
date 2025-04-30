@@ -1,9 +1,10 @@
 package org.fentanylsolutions.tabfaces.registries;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -21,10 +22,10 @@ public class ClientRegistry {
 
     private Map<String, Data> playerEntities;
     private float tickCounter;
-    private volatile boolean fetchingServerStatus = false;
+    private final AtomicBoolean fetchingServerStatus = new AtomicBoolean(false);
 
     public ClientRegistry() {
-        this.playerEntities = new HashMap<>();
+        this.playerEntities = new ConcurrentHashMap<>();
         this.tickCounter = 0;
     }
 
@@ -38,19 +39,32 @@ public class ClientRegistry {
 
     public void insert(String displayName, UUID id, ResourceLocation skinResourceLocation, boolean removeAfterTTL,
         int ttl) {
-        TabFaces.debug(
-            "Inserted " + displayName
-                + ", "
-                + id.toString()
-                + ", "
-                + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
-        Data existing = getByDisplayName(displayName);
-        boolean foundSkin = false;
-        if (existing != null) {
-            foundSkin = existing.foundRealSkin;
+
+        if (id != null) {
+            TabFaces.debug(
+                "Inserted " + displayName
+                    + ", "
+                    + id
+                    + ", "
+                    + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
+        } else {
+            TabFaces.debug(
+                "Inserted " + displayName
+                    + ", "
+                    + "null"
+                    + ", "
+                    + (skinResourceLocation != null ? skinResourceLocation.toString() : "null"));
         }
-        playerEntities.put(displayName, new Data(displayName, id, skinResourceLocation, removeAfterTTL, ttl));
-        getByDisplayName(displayName).foundRealSkin = foundSkin;
+
+        synchronized (this) {
+            Data existing = playerEntities.get(displayName);
+            boolean foundSkin = existing != null && existing.foundRealSkin;
+
+            Data newData = new Data(displayName, id, skinResourceLocation, removeAfterTTL, ttl);
+            newData.foundRealSkin = foundSkin;
+
+            playerEntities.put(displayName, newData);
+        }
     }
 
     public void removeByDisplayName(String displayName) {
@@ -67,33 +81,39 @@ public class ClientRegistry {
         }
         Data data = playerEntities.get(displayName);
         if (data == null) {
-            if (!fetchingServerStatus) {
-                fetchingServerStatus = true;
+            if (fetchingServerStatus.compareAndSet(false, true)) {
                 new Thread(() -> {
                     TabFaces.debug("Starting new ServerPingThread");
                     PingUtil.ServerStatusCallbackClientRegistry callback = new PingUtil.ServerStatusCallbackClientRegistry();
-                    PingUtil.pingServer(callback);
-                    fetchingServerStatus = false;
+                    PingUtil.pingServer(callback, displayName);
+                    fetchingServerStatus.set(false);
+                    TabFaces.debug("ServerPingThread Done");
                 }, "ServerPingThread-" + displayName).start();
             }
             return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
                 : AbstractClientPlayer.locationStevePng;
         }
-        if (data.skinResourceLocation == null && data.profile == null && !data.resolving) {
-            data.resolving = true;
-            new Thread(() -> {
-                TabFaces.debug("Starting new GameProfileResolverThread");
-                data.profile = Util.getFullProfile(data.id, data.displayName);
-                TabFaces.debug("Got full profile.");
-                if (!data.profile.getProperties()
-                    .isEmpty()) {
-                    data.foundRealSkin = true;
-                    TabFaces.debug("Properties of " + data.displayName + " are not empty.");
-                }
-                data.resolving = false;
-            }, "GameProfileResolverThread-" + displayName).start();
-        } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
-            insert(displayName, data.id, ClientUtil.skinResourceLocation(data.profile), removeAfterTTL, ttl);
+        synchronized (data) {
+            if (data.skinResourceLocation == null && data.profile == null && !data.resolving) {
+                data.resolving = true;
+                new Thread(() -> {
+                    TabFaces.debug("Starting new GameProfileResolverThread");
+                    GameProfile profile = Util.getFullProfile(data.id, data.displayName);
+                    TabFaces.debug("Got full profile.");
+
+                    synchronized (data) {
+                        data.profile = profile;
+                        if (!data.profile.getProperties()
+                            .isEmpty()) {
+                            data.foundRealSkin = true;
+                            TabFaces.debug("Properties of " + data.displayName + " are not empty.");
+                        }
+                        data.resolving = false;
+                    }
+                }, "GameProfileResolverThread-" + displayName).start();
+            } else if (data.skinResourceLocation == null && data.profile != null && !data.resolving) {
+                insert(displayName, data.id, ClientUtil.skinResourceLocation(data.profile), removeAfterTTL, ttl);
+            }
         }
         return data.skinResourceLocation;
     }
@@ -121,12 +141,14 @@ public class ClientRegistry {
                 long elapsedSeconds = (currentTime - data.timestamp) / 1000;
 
                 if (elapsedSeconds > data.ttl) {
-                    if (data.removeAfterTTL) {
-                        TabFaces.debug("TTL expired and removeAfterTTL is true, removing entry");
-                        iterator.remove();
-                    } else if (data.skinResourceLocation != null) {
-                        TabFaces.debug("TTL expired, clearing skinResourceLocation");
-                        data.skinResourceLocation = null;
+                    synchronized (data) {
+                        if (data.removeAfterTTL) {
+                            TabFaces.debug("TTL expired and removeAfterTTL is true, removing entry");
+                            iterator.remove();
+                        } else if (data.skinResourceLocation != null) {
+                            TabFaces.debug("TTL expired, clearing skinResourceLocation");
+                            data.skinResourceLocation = null;
+                        }
                     }
                 }
             }

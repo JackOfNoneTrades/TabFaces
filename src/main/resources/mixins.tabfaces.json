@@ -5,7 +5,7 @@
   "refmap": "mixins.tabfaces.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
-  "client": [
+  "client" : [
     "minecraftforge.MixinGuiInGameForge"
   ]
 }

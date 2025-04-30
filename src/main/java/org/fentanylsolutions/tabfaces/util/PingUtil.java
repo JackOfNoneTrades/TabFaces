@@ -3,6 +3,7 @@ package org.fentanylsolutions.tabfaces.util;
 import java.net.InetAddress;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.ServerStatusResponse;
@@ -15,6 +16,7 @@ import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
+import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 
@@ -34,7 +36,7 @@ public class PingUtil {
             try {
                 port = Integer.parseInt(parts[1]);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid port number, using default: " + DEFAULT_PORT);
+                TabFaces.error("Invalid port number, using default: " + DEFAULT_PORT);
             }
         } else {
             address = input;
@@ -78,13 +80,14 @@ public class PingUtil {
     /* The real deal */
     public static class ServerStatusCallbackClientRegistry extends ServerStatusCallback {
 
-        @Override
-        public void onResponse(ServerStatusResponse response) {
+        // @Override
+        public void onResponse(ServerStatusResponse response, String targetDisplayName) {
             TabFaces.info(response.toString());
             ServerStatusResponse.PlayerCountData playerData = response.func_151318_b();
 
             if (playerData != null) {
                 GameProfile[] profiles = playerData.func_151331_c();
+                boolean targetFound = false;
                 if (profiles != null && profiles.length > 0) {
                     for (GameProfile profile : profiles) {
                         ClientRegistry.Data res = TabFaces.varInstanceClient.clientRegistry
@@ -92,10 +95,23 @@ public class PingUtil {
                         if (res == null || res.id == null) {
                             TabFaces.varInstanceClient.clientRegistry
                                 .insert(profile.getName(), profile.getId(), null, false, -1);
+                            if (profile.getName()
+                                .equals(targetDisplayName)) {
+                                targetFound = true;
+                            }
                         }
                     }
                 } else {
                     TabFaces.debug("No players provided by server.");
+                }
+                if (!targetFound) {
+                    TabFaces.varInstanceClient.clientRegistry.insert(
+                        targetDisplayName,
+                        null,
+                        Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
+                            : AbstractClientPlayer.locationStevePng,
+                        true,
+                        Config.skinTtl);
                 }
             } else {
                 TabFaces.debug("No player data in server response.");
@@ -103,7 +119,7 @@ public class PingUtil {
         }
     }
 
-    public static void pingServer(ServerStatusCallback callback) {
+    public static void pingServer(ServerStatusCallback callback, String targetDisplayName) {
         String[] addressPair = parseAddress(ClientUtil.minecraftInstance.func_147104_D().serverIP);
 
         try {
@@ -119,7 +135,7 @@ public class PingUtil {
                     receivedInfo = true;
                     ServerStatusResponse response = packetIn.func_149294_c();
                     if (callback != null) {
-                        callback.onResponse(response);
+                        ((ServerStatusCallbackClientRegistry) callback).onResponse(response, targetDisplayName);
                     }
                     networkManager.scheduleOutboundPacket(new C01PacketPing(Minecraft.getSystemTime()));
                 }

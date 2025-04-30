@@ -2,8 +2,10 @@ package org.fentanylsolutions.tabfaces;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fentanylsolutions.tabfaces.compat.serverutilities.ModifyNameSubstitute;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -54,6 +56,10 @@ public class TabFaces {
     // postInit "Handle interaction with other mods, complete your setup based on this."
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
+
+        if (Loader.isModLoaded("serverutilities")) {
+            ModifyNameSubstitute.substitute();
+        }
     }
 
     @SuppressWarnings("unused")

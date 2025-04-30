@@ -22,6 +22,42 @@ import acs.tabbychat.core.TCChatLine;
 @Mixin(GuiNewChatTC.class)
 public abstract class MixinGuiNewChatTC {
 
+    private int drawFaceAndText(FontRenderer fontRenderer, int x, int y, int color, List<IChatComponent> siblings,
+        int start, int nameIndex, int end) {
+        StringBuilder prefix = new StringBuilder();
+        for (int j = 0; j < start; ++j) {
+            prefix.append(
+                siblings.get(j)
+                    .getFormattedText());
+        }
+
+        StringBuilder nameAndRest = new StringBuilder();
+        for (int j = start; j < siblings.size(); ++j) {
+            nameAndRest.append(
+                siblings.get(j)
+                    .getFormattedText());
+        }
+
+        int xCursor = x;
+        if (prefix.length() > 0) {
+            xCursor += fontRenderer.drawStringWithShadow(prefix.toString(), xCursor, y, color) - 1;
+        }
+
+        String rawName = siblings.get(nameIndex)
+            .getUnformattedText()
+            .replaceAll("(?i)§[0-9A-FK-OR]", "");
+
+        ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(rawName, false, -1);
+
+        if (rl != null) {
+            float alpha = (float) (color >> 24 & 255) / 255.0F;
+            ClientUtil.drawPlayerFace(rl, xCursor + Config.faceXOffset, y - 0.5f, alpha);
+            xCursor += 11;
+        }
+
+        return fontRenderer.drawStringWithShadow(nameAndRest.toString(), xCursor, y, color);
+    }
+
     @Redirect(
         method = "drawChat",
         at = @At(
@@ -31,55 +67,102 @@ public abstract class MixinGuiNewChatTC {
         @Local List<TCChatLine> msgList, @Local(ordinal = 7) int i, @Local(ordinal = 11) int textOpacity,
         @Local(ordinal = 8) int yOrigin) {
 
-        List<IChatComponent> siblings = msgList.get(i)
-            .getChatComponent()
-            .getSiblings();
+        TCChatLine currentChatLine = msgList.get(i);
 
-        if (!Config.enableFacesInTabbyChat || siblings.size() <= 2) {
-            return fontRenderer.drawStringWithShadow(text, x, y, color);
-        }
-
-        for (int s = 0; s < siblings.size() - 2; ++s) {
-            if (siblings.get(s)
-                .getUnformattedText()
-                .equals("<")
-                && siblings.get(s + 2)
-                    .getUnformattedText()
-                    .equals("> ")) {
-
-                String prefix = "";
-                for (int j = 0; j < s; ++j) {
-                    prefix += siblings.get(j)
-                        .getFormattedText();
+        if (Config.enableFacesInTabbyChat && currentChatLine != null) {
+            List<IChatComponent> siblings = currentChatLine.getChatComponent()
+                .getSiblings();
+            if (siblings.size() > 2) {
+                String detectedName = null;
+                String commandPrefix = "/msg ";
+                for (int s = 0; s < siblings.size() - 2; ++s) {
+                    if (siblings.get(s)
+                        .getChatStyle() != null
+                        && siblings.get(s)
+                            .getChatStyle()
+                            .getChatClickEvent() != null
+                        && siblings.get(s)
+                            .getChatStyle()
+                            .getChatClickEvent()
+                            .getValue() != null
+                        && siblings.get(s)
+                            .getChatStyle()
+                            .getChatClickEvent()
+                            .getValue()
+                            .startsWith(commandPrefix)) {
+                        if (siblings.get(s)
+                            .getChatStyle()
+                            .getChatClickEvent()
+                            .getValue()
+                            .startsWith(commandPrefix)) {
+                            detectedName = siblings.get(s)
+                                .getChatStyle()
+                                .getChatClickEvent()
+                                .getValue()
+                                .substring(commandPrefix.length());
+                        }
+                    }
                 }
+                for (int s = 0; s < siblings.size() - 2; ++s) {
+                    if (siblings.get(s)
+                        .getUnformattedText()
+                        .equals("<")) {
+                        int end = -1;
+                        for (int i_ = s + 1; i_ < siblings.size(); ++i_) {
+                            if (siblings.get(i_)
+                                .getUnformattedText()
+                                .startsWith(">")) {
+                                end = i_;
+                                break;
+                            }
+                        }
 
-                String nameAndRest = "";
-                for (int j = s; j < siblings.size(); ++j) {
-                    nameAndRest += siblings.get(j)
-                        .getFormattedText();
+                        if (end != -1) {
+                            StringBuilder prefix = new StringBuilder();
+                            for (int j = 0; j < s; ++j) {
+                                prefix.append(
+                                    siblings.get(j)
+                                        .getFormattedText());
+                            }
+
+                            StringBuilder nameAndRest = new StringBuilder();
+                            for (int j = s; j < siblings.size(); ++j) {
+                                nameAndRest.append(
+                                    siblings.get(j)
+                                        .getFormattedText());
+                            }
+
+                            int xCursor = x;
+                            if (prefix.length() > 0) {
+                                xCursor += fontRenderer.drawStringWithShadow(prefix.toString(), xCursor, y, color) - 1;
+                            }
+
+                            StringBuilder tokenBuilder = new StringBuilder();
+                            for (int j = s + 1; j < end; ++j) {
+                                tokenBuilder.append(
+                                    siblings.get(j)
+                                        .getUnformattedText())
+                                    .append(" ");
+                            }
+                            String cleaned = tokenBuilder.toString()
+                                .trim()
+                                .replaceAll("(?i)§[0-9A-FK-OR]", "");
+
+                            ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
+                                .getTabMenuResourceLocation(detectedName == null ? cleaned : detectedName, false, -1);
+                            if (rl != null) {
+                                float alpha = (float) (color >> 24 & 255) / 255.0F;
+                                ClientUtil.drawPlayerFace(rl, xCursor + Config.faceXOffset, y - 0.5f, alpha);
+                                xCursor += 11;
+                            }
+
+                            return fontRenderer.drawStringWithShadow(nameAndRest.toString(), xCursor, y, color);
+                        }
+                    }
+
                 }
-
-                int xCursor = x;
-                if (!prefix.isEmpty()) {
-                    xCursor += fontRenderer.drawStringWithShadow(prefix, xCursor, y, color) - 1;
-                }
-
-                ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(
-                    siblings.get(s + 1)
-                        .getUnformattedText(),
-                    false,
-                    -1);
-
-                if (rl != null) {
-                    float alpha = (float) textOpacity / 255.0F;
-                    ClientUtil.drawPlayerFace(rl, xCursor + Config.faceXOffsetTabbyChat, yOrigin + 0.5f, alpha);
-                    xCursor += (int) (10 + Config.faceXOffsetTabbyChat);
-                }
-
-                return fontRenderer.drawStringWithShadow(nameAndRest, xCursor, y, color);
             }
         }
-
-        return fontRenderer.drawStringWithShadow(text, x, yOrigin + 1, color);
+        return fontRenderer.drawStringWithShadow(text, x, y, color);
     }
 }

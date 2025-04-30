@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @SuppressWarnings("unused")
@@ -21,12 +22,16 @@ public class EarlyMixinLoader implements IEarlyMixinLoader, IFMLLoadingPlugin {
     @Override
     public List<String> getMixins(Set<String> loadedCoreMods) {
         final List<String> mixins = new ArrayList<>();
-        mixins.add("minecraft.MixinGuiMultiplayer");
-        mixins.add("minecraft.MixinOldServerPingerINetHandlerStatusClient");
-        mixins.add("minecraft.MixinGui");
-        mixins.add("minecraft.MixinGuiScreen");
-        mixins.add("minecraft.MixinGuiNewChat");
-        mixins.add("minecraft.MixinChatLine");
+        if (FMLLaunchHandler.side()
+            .isClient()) {
+            mixins.add("minecraft.MixinGuiMultiplayer");
+            mixins.add("minecraft.MixinOldServerPingerINetHandlerStatusClient");
+            mixins.add("minecraft.MixinGui");
+            mixins.add("minecraft.MixinGuiScreen");
+            mixins.add("minecraft.MixinGuiNewChat");
+            mixins.add("minecraft.MixinChatLine");
+        }
+
         return mixins;
     }
 

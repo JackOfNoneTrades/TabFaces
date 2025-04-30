@@ -29,8 +29,6 @@ public class TabFacesSettings extends TCSettingsGUIExposedNoClickbait {
             "showPlayerFaces",
             this.propertyPrefix,
             SHOW_PLAYER_FACES_ID);
-        System.out.println("SNEED");
-        System.out.println(Config.faceXOffset);
         this.faceXOffsetSlider = new TCSettingSlider(
             Config.faceXOffsetTabbyChat,
             "faceXOffset",
