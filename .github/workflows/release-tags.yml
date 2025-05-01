@@ -10,5 +10,9 @@ permissions:
 
 jobs:
   release-tags:
-    uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/release-tags.yml@master
-    secrets: inherit
+    uses: ./.github/workflows/release-tags-main.yml
+    secrets:
+      MAVEN_USER: ${{ secrets.MAVEN_USER }}
+      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
