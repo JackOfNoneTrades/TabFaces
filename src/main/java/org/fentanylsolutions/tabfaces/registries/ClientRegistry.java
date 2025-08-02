@@ -11,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.compat.LoadedMods;
+import org.fentanylsolutions.tabfaces.compat.skinport.SkinPortCompat;
 import org.fentanylsolutions.tabfaces.util.ClientUtil;
 import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
@@ -115,7 +117,11 @@ public class ClientRegistry {
                 insert(displayName, data.id, ClientUtil.skinResourceLocation(data.profile), removeAfterTTL, ttl);
             }
         }
-        return data.skinResourceLocation;
+        if (LoadedMods.skinPortLoaded) {
+            return SkinPortCompat.getSkinPortCachedSkin(data.id, displayName);
+        } else {
+            return data.skinResourceLocation;
+        }
     }
 
     public void clear() {

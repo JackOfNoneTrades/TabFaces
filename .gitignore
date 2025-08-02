@@ -39,3 +39,4 @@ addon.late.local.gradle.kts
 layout.json
 .runOwn/
 .runOwn/Run Client (IJ Native).run.xml
+.env

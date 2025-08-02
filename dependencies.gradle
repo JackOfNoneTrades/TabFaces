@@ -33,10 +33,21 @@
  *
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
+
+def useSkinport = true;
+
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev")
     api("maven.modrinth:carbon-config:ttXTOUmO")
     compileOnly(rfg.deobf("maven.modrinth:tabbychat-unofficial:FgpPdGV9"))
     compileOnly("com.github.GTNewHorizons:GTNHLib:0.6.21:dev")
     compileOnly("com.github.GTNewHorizons:ServerUtilities:2.1.46:dev")
+
+    if (useSkinport) {
+        api(rfg.deobf("curse.maven:skinport-234948:3212017"))
+    } else {
+        compileOnly(rfg.deobf("curse.maven:skinport-234948:3212017"))
+    }
+
+    //api("roadhog360:simpleskinbackport:1-fent")
 }

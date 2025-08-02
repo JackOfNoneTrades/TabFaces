@@ -58,7 +58,8 @@ public abstract class MixinGuiNewChat {
 
         String rawName = siblings.get(nameIndex)
             .getUnformattedText()
-            .replaceAll("(?i)§[0-9A-FK-OR]", "");
+            .replaceAll("(?i)§[0-9A-FK-OR]", "")
+            .trim();
 
         ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(rawName, false, -1);
 
@@ -105,7 +106,8 @@ public abstract class MixinGuiNewChat {
                             .getChatStyle()
                             .getChatClickEvent()
                             .getValue()
-                            .substring(commandPrefix.length());
+                            .substring(commandPrefix.length())
+                            .trim();
                     }
                 }
                 for (int s = 0; s < siblings.size() - 2; ++s) {

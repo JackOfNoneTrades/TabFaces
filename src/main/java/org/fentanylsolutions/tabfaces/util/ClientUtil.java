@@ -1,8 +1,15 @@
 package org.fentanylsolutions.tabfaces.util;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -10,6 +17,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,6 +27,7 @@ import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.access.IMixinGui;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiScreen;
+import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 import org.lwjgl.opengl.GL11;
@@ -47,7 +58,7 @@ public class ClientUtil {
             return location;
         }
         return Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
-            : AbstractClientPlayer.locationStevePng;
+            : AbstractClientPlayer.getLocationSkin(profile.getName());
     }
 
     public static boolean onServer() {
@@ -250,9 +261,20 @@ public class ClientUtil {
             VarInstanceClient.minecraftRef.getTextureManager()
                 .bindTexture(rl);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, alpha);
-            // int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float
-            // tileWidth, float tileHeight
-            drawTexFloat(xPos, yPos, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
+            if (LoadedMods.skinPortLoaded) {
+                // Draw base face: (8, 8) to (16, 16)
+                drawTexFloat(xPos, yPos, 8, 8, 8, 8, 8, 8, 64.0F, 64.0F);
+
+                // Draw overlay (hat layer): (40, 8) to (48, 16)
+                // Render it with alpha so it looks like a layer
+
+                GL11.glEnable(GL11.GL_ALPHA_TEST);
+                drawTexFloat(xPos, yPos, 40, 8, 8, 8, 8, 8, 64.0F, 64.0F);
+            } else {
+                // int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float
+                // tileWidth, float tileHeight
+                drawTexFloat(xPos, yPos, 8, 14, 8, 18, 8, 8, 64.0F, 64.0F);
+            }
         }
     }
 
@@ -267,5 +289,76 @@ public class ClientUtil {
         tessellator.addVertexWithUV(x + width, y, 0.0D, (u + (float) uWidth) * f4, v * f5);
         tessellator.addVertexWithUV(x, y, 0.0D, u * f4, v * f5);
         tessellator.draw();
+    }
+
+    public static class OfflineTextureObject extends AbstractTexture {
+
+        private final BufferedImage image;
+
+        public OfflineTextureObject(BufferedImage image) {
+            this.image = image;
+        }
+
+        public BufferedImage getImage() {
+            return this.image;
+        }
+
+        public void loadTexture(IResourceManager arg0) {
+            deleteGlTexture();
+            TextureUtil.uploadTextureImageAllocate(getGlTextureId(), this.image, false, false);
+        }
+    }
+
+    public static void loadTexture(BufferedImage bufferedImage, ResourceLocation resourceLocation) {
+        if (bufferedImage == null || resourceLocation == null) {
+            TabFaces.error("Error loading texture!");
+        } else {
+            OfflineTextureObject offlineTextureObject = new OfflineTextureObject(bufferedImage);
+            Minecraft.getMinecraft()
+                .getTextureManager()
+                .loadTexture(resourceLocation, offlineTextureObject);
+        }
+    }
+
+    public static BufferedImage resourceLocationToBufferedImage(ResourceLocation rl) {
+        try {
+            return ImageIO.read(new File(rl.getResourcePath()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static BufferedImage bufferedImageFromBytes(byte[] bytes) {
+        InputStream is = new ByteArrayInputStream(bytes);
+        try {
+            return ImageIO.read(is);
+        } catch (IOException e) {
+            TabFaces.error("Failed to read skin bytes into bufferedimage");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ResourceLocation loadSkinFromBytes(byte[] skinBytes, String displayName) {
+        if (skinBytes == null || skinBytes.length == 0) {
+            TabFaces.error("Invalid skinBytes");
+            return null;
+        }
+        if (displayName == null || displayName.length() == 0) {
+            TabFaces.error("Invalid displayName");
+        }
+        BufferedImage im = bufferedImageFromBytes(skinBytes);
+        if (im == null) {
+            TabFaces.error("Failed to load skin from bytes, im null");
+            return null;
+        }
+        /*
+         * if (im.getHeight() == 64) {
+         * im = new LegacyConversion().convert(im);
+         * }
+         */
+        ResourceLocation rl = new ResourceLocation("Tabfaceslol", "tabfaces/" + displayName);
+        loadTexture(im, rl);
+        return rl;
     }
 }

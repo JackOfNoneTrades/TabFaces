@@ -109,7 +109,7 @@ public class PingUtil {
                         targetDisplayName,
                         null,
                         Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
-                            : AbstractClientPlayer.locationStevePng,
+                            : AbstractClientPlayer.getLocationSkin(targetDisplayName),
                         true,
                         Config.skinTtl);
                 }

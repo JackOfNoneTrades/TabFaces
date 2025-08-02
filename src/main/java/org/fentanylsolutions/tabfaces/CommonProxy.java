@@ -1,6 +1,7 @@
 package org.fentanylsolutions.tabfaces;
 
 import org.fentanylsolutions.tabfaces.command.CommandTest;
+import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.util.Util;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -18,6 +19,7 @@ public class CommonProxy {
     // GameRegistry."
     public void preInit(FMLPreInitializationEvent event) {
         TabFaces.info("TabFaces version " + Tags.VERSION + " running on " + (Util.isServer() ? "Server" : "Client"));
+        LoadedMods.init();
 
         // TabFaces.confFile = event.getSuggestedConfigurationFile();
         // TabFaces.configuration = new Configuration(TabFaces.confFile);
