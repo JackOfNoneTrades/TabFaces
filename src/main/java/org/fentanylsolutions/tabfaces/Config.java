@@ -1,140 +1,100 @@
 package org.fentanylsolutions.tabfaces;
 
-import carbonconfiglib.CarbonConfig;
-import carbonconfiglib.config.ConfigEntry;
-import carbonconfiglib.config.ConfigHandler;
-import carbonconfiglib.config.ConfigSection;
+import java.io.File;
+
+import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-    public static ConfigHandler config;
+    private static Configuration config;
 
-    private static class Defaults {
+    public static boolean enableFacesInTabMenu;
+    public static boolean showQuestionMarkIfUnknown;
+    public static boolean trimTabMenu;
+    public static int skinTtl;
+    public static int skinTtlInterval;
 
-        /* client */
-        public static final boolean showQuestionMarkIfUnknown = true;
-        public static final int skinTtl = 1200;
-        public static final int skinTtlInterval = 120;
-        public static final boolean enableFacesInTabMenu = true;
-        public static final boolean enableFacesInServerMenu = true;
-        public static final boolean enableFacesInChat = true;
-        public static final boolean enableFacesInTabbyChat = true;
-        public static final boolean trimTabMenu = true;
-        public static final float faceXOffset = 1.0f;
-        public static final float faceXOffsetTabbyChat = 1.0f;
+    public static boolean enableFacesInServerMenu;
 
-        /* common */
-        public static final boolean debugMode = false;
-    }
+    public static boolean enableFacesInChat;
+    public static boolean enableFacesInTabbyChat;
+    public static float faceXOffset;
+    public static float faceXOffsetTabbyChat;
+
+    public static boolean debugMode;
 
     public static class Categories {
 
         public static final String general = "general";
-        public static final String tabmenu = "Tab Menu";
-        public static final String servermenu = "Server Selection Menu";
-        public static final String chat = "Chat";
-        public static final String debug = "Debug";
+        public static final String tabmenu = "tabmenu";
+        public static final String servermenu = "servermenu";
+        public static final String chat = "chat";
+        public static final String debug = "debug";
     }
 
-    /* Tab */
-    public static boolean enableFacesInTabMenu = Defaults.enableFacesInTabMenu;
-    public static ConfigEntry.BoolValue enableFacesInTabMenuCE;
-    public static boolean showQuestionMarkIfUnknown = Defaults.showQuestionMarkIfUnknown;
-    public static ConfigEntry.BoolValue showQuestionMarkIfUnknownCE;
-    public static boolean trimTabMenu = Defaults.trimTabMenu;
-    public static ConfigEntry.BoolValue trimTabMenuCE;
-    public static int skinTtl = Defaults.skinTtl;
-    public static ConfigEntry.IntValue skinTtlCE;
-    public static int skinTtlInterval = Defaults.skinTtlInterval;
-    public static ConfigEntry.IntValue skinTtlIntervalCE;
+    public static void loadConfig(File configFile) {
+        config = new Configuration(configFile);
 
-    /* Server List */
-    public static boolean enableFacesInServerMenu = Defaults.enableFacesInServerMenu;
-    public static ConfigEntry.BoolValue enableFacesInServerMenuCE;
+        try {
+            config.load();
 
-    /* Chat */
-    public static boolean enableFacesInChat = Defaults.enableFacesInChat;
-    public static ConfigEntry.BoolValue enableFacesInChatCE;
-    public static boolean enableFacesInTabbyChat = Defaults.enableFacesInTabbyChat;
-    public static ConfigEntry.BoolValue enableFacesInTabbyChatCE;
-    public static float faceXOffset = Defaults.faceXOffset;
-    public static ConfigEntry.DoubleValue faceXOffsetCE;
-    public static float faceXOffsetTabbyChat = Defaults.faceXOffset;
-    public static ConfigEntry.DoubleValue faceXOffsetTabbyChatCE;
+            // Tab Menu
+            enableFacesInTabMenu = config.getBoolean(
+                "enableFacesInTabMenu",
+                Categories.tabmenu,
+                true,
+                "Enable player faces in the server tab menu");
+            showQuestionMarkIfUnknown = config.getBoolean(
+                "showQuestionMarkIfUnknown",
+                Categories.tabmenu,
+                true,
+                "Show question mark instead of Steve when a skin can't load");
+            trimTabMenu = config
+                .getBoolean("trimTabMenu", Categories.tabmenu, true, "Trim tab list to match number of players");
+            skinTtl = config.getInt(
+                "skinTtl",
+                Categories.tabmenu,
+                1200,
+                60,
+                Integer.MAX_VALUE,
+                "Seconds before a skin is refreshed");
+            skinTtlInterval = config.getInt(
+                "skinTtlInterval",
+                Categories.tabmenu,
+                120,
+                10,
+                Integer.MAX_VALUE,
+                "Interval in seconds for skin GC");
 
-    /* Debug */
-    public static boolean debugMode = Defaults.debugMode;
-    public static ConfigEntry.BoolValue debugModeCE;
+            // Server Menu
+            enableFacesInServerMenu = config.getBoolean(
+                "enableFacesInServerMenu",
+                Categories.servermenu,
+                true,
+                "Enable faces in server selection menu");
 
-    public static void registerConfig() {
-        carbonconfiglib.config.Config conf = new carbonconfiglib.config.Config(TabFaces.MODID);
+            // Chat
+            enableFacesInChat = config
+                .getBoolean("enableFacesInChat", Categories.chat, true, "Enable player faces in chat");
+            enableFacesInTabbyChat = config
+                .getBoolean("enableFacesInTabbyChat", Categories.chat, true, "Enable faces in Tabby Chat");
+            faceXOffset = config.getFloat("faceXOffset", Categories.chat, 1.0f, -10.0f, 10.0f, "Face X offset");
+            faceXOffsetTabbyChat = config
+                .getFloat("faceXOffsetTabbyChat", Categories.chat, 1.0f, -10.0f, 10.0f, "Face X offset (TabbyChat)");
 
-        /* Tab */
-        ConfigSection tabmenuSection = conf.add(Categories.tabmenu);
-        enableFacesInTabMenuCE = tabmenuSection.addBool(
-            "enableFacesInTabMenu",
-            Defaults.enableFacesInTabMenu,
-            "Enable player faces in the server tab menu");
-        showQuestionMarkIfUnknownCE = tabmenuSection.addBool(
-            "showQuestionMarkIfUnknown",
-            Defaults.showQuestionMarkIfUnknown,
-            "Show a question mark texture instead of Steve when a skin cannot be loaded");
-        trimTabMenuCE = tabmenuSection
-            .addBool("trimTabMenu", Defaults.trimTabMenu, "Display only as much rows as there are connected players");
-        skinTtlCE = tabmenuSection
-            .addInt("skinTtl", Defaults.skinTtl, "How many seconds elapse before a skin is refreshed");
-        skinTtlIntervalCE = tabmenuSection.addInt(
-            "skinTtlInterval",
-            Defaults.skinTtlInterval,
-            "Interval in seconds at which the skin garbage collection runs");
+            // Debug
+            debugMode = config.getBoolean("debugMode", Categories.debug, false, "Enable debug logging");
 
-        /* Server List */
-        ConfigSection servermenuSection = conf.add(Categories.servermenu);
-        enableFacesInServerMenuCE = servermenuSection.addBool(
-            "enableFacesInServerMenu",
-            Defaults.enableFacesInServerMenu,
-            "Enable player faces in the server selection menu");
-
-        /* Chat */
-        ConfigSection chatSection = conf.add(Categories.chat);
-        enableFacesInChatCE = chatSection
-            .addBool("enableFacesInChat", Defaults.enableFacesInChat, "Enable player faces in the chat");
-        enableFacesInTabbyChatCE = chatSection
-            .addBool("enableFacesInTabbyChat", Defaults.enableFacesInTabbyChat, "Enable player faces in Tabby Chat");
-        faceXOffsetCE = chatSection.addDouble("faceXOffset", Defaults.faceXOffset, "Face x offset");
-        faceXOffsetTabbyChatCE = chatSection
-            .addDouble("faceXOffsetTabbyChat", Defaults.faceXOffsetTabbyChat, "Face x offset (TabbyChat)");
-
-        /* Debug */
-        ConfigSection debugSection = conf.add(Categories.debug);
-        debugModeCE = debugSection.addBool("debugMode", Defaults.debugMode);
-
-        config = CarbonConfig.CONFIGS.createConfig(conf);
-        config.addLoadedListener(() -> {
-            TabFaces.debug("Carbon config callback, dumping vars.");
-            dumpConf();
-        });
-        config.register();
+        } catch (Exception e) {
+            System.err.println("Error loading config: " + e.getMessage());
+        } finally {
+            // if (config.hasChanged()) {
+            config.save();
+            // }
+        }
     }
 
-    private static void dumpConf() {
-        /* Tab */
-        enableFacesInTabMenu = enableFacesInTabMenuCE.get();
-        showQuestionMarkIfUnknown = showQuestionMarkIfUnknownCE.get();
-        trimTabMenu = trimTabMenuCE.get();
-        skinTtl = skinTtlCE.get();
-        skinTtlInterval = skinTtlIntervalCE.get();
-
-        /* Server List */
-        enableFacesInServerMenu = enableFacesInServerMenuCE.get();
-
-        /* Chat */
-        enableFacesInChat = enableFacesInChatCE.get();
-        enableFacesInTabbyChat = enableFacesInTabbyChatCE.get();
-        faceXOffset = (float) faceXOffsetCE.get();
-        faceXOffsetTabbyChat = (float) faceXOffsetTabbyChatCE.get();
-
-        /* Debug */
-        debugMode = debugModeCE.get();
+    public static Configuration getRawConfig() {
+        return config;
     }
 }

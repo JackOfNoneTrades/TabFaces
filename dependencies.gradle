@@ -38,7 +38,7 @@ def useSkinport = true;
 
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev")
-    api("maven.modrinth:carbon-config:ttXTOUmO")
+    compileOnly("maven.modrinth:carbon-config:ttXTOUmO")
     compileOnly(rfg.deobf("maven.modrinth:tabbychat-unofficial:FgpPdGV9"))
     compileOnly("com.github.GTNewHorizons:GTNHLib:0.6.21:dev")
     compileOnly("com.github.GTNewHorizons:ServerUtilities:2.1.46:dev")
@@ -50,4 +50,7 @@ dependencies {
     }
 
     //api("roadhog360:simpleskinbackport:1-fent")
+
+    /* Fixes the mod menu being broken ingame, allows for quick config testing */
+    runtimeOnlyNonPublishable(rfg.deobf("curse.maven:endercore-231868:4671288"))
 }

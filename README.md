@@ -12,7 +12,7 @@
 ## Dependencies
 
 * As of version 1.0.2, [UniMixins](https://modrinth.com/mod/unimixins) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/unimixins), [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/unimixins/versions), [![git](images/icons/git.png)](https://github.com/LegacyModdingMC/UniMixins/releases)) is a required dependency.
-* As of version 1.0.4, [CarbonConfig](https://modrinth.com/mod/carbon-config) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/carbon-config), [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/carbon-config), [![git](images/icons/git.png)](https://github.com/Carbon-Config-Project/CarbonConfig)) is a required dependency.
+* Prior to version 1.0.10, [CarbonConfig](https://modrinth.com/mod/carbon-config) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/carbon-config), [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/carbon-config), [![git](images/icons/git.png)](https://github.com/Carbon-Config-Project/CarbonConfig)) is a required dependency.
 * As of version 1.0.9, [SkinPort](https://www.curseforge.com/minecraft/mc-mods/skinport) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/skinport), [![git](images/icons/git.png)](https://github.com/zlainsama/SkinPort)) is an optional dependency and has added compat.
 
 ## FAQ

@@ -19,15 +19,22 @@ public class TCSettingsGUIExposedNoClickbait extends TCSettingsGUI {
     public void actionPerformed(GuiButton button) {
         super.actionPerformed(button);
         if (button.id == TabFacesSettings.TABFACES_SETTINGS_SAVE_BUTTON_ID) {
-            Config.enableFacesInTabbyChatCE
+            Config.getRawConfig()
+                .get(Config.Categories.chat, "enableFacesInTabbyChat", true)
                 .set(((IMixinTabbyChat) tc).getTabFacesSettings().showPlayerFaces.getTempValue());
+            Config.enableFacesInTabbyChat = ((IMixinTabbyChat) tc).getTabFacesSettings().showPlayerFaces.getTempValue();
 
             IMixinTCSettingSlider slider = (IMixinTCSettingSlider) ((IMixinTabbyChat) tc)
                 .getTabFacesSettings().faceXOffsetSlider;
             int val = Math
                 .round(slider.getSliderValue() * (slider.getMaxValue() - slider.getMinValue()) + slider.getMinValue());
-            Config.faceXOffsetTabbyChatCE.set((double) val);
-            Config.config.save();
+            Config.getRawConfig()
+                .get(Config.Categories.chat, "faceXOffsetTabbyChat", 1)
+                .set(val);
+            Config.faceXOffsetTabbyChat = val;
+
+            Config.getRawConfig()
+                .save();
         }
     }
 }
