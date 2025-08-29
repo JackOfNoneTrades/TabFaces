@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.IConfigElement;
 
 @SuppressWarnings("unused")
 public class GuiFactory implements IModGuiFactory {
@@ -40,23 +39,22 @@ public class GuiFactory implements IModGuiFactory {
 
     public static class ConfigGui extends GuiConfig {
 
-        private static IConfigElement ceTabMenu = new ConfigElement(
-            Config.getRawConfig()
-                .getCategory(Config.Categories.tabmenu));
-        private static IConfigElement ceChat = new ConfigElement(
-            Config.getRawConfig()
-                .getCategory(Config.Categories.chat));
-        private static IConfigElement ceServerMenu = new ConfigElement(
-            Config.getRawConfig()
-                .getCategory(Config.Categories.servermenu));
-        private static IConfigElement ceDebug = new ConfigElement(
-            Config.getRawConfig()
-                .getCategory(Config.Categories.debug));
-
         public ConfigGui(GuiScreen parentScreen) {
             super(
                 parentScreen,
-                ImmutableList.of(ceTabMenu, ceChat, ceServerMenu, ceDebug),
+                ImmutableList.of(
+                    new ConfigElement(
+                        Config.getRawConfig()
+                            .getCategory(Config.Categories.tabmenu)),
+                    new ConfigElement(
+                        Config.getRawConfig()
+                            .getCategory(Config.Categories.chat)),
+                    new ConfigElement(
+                        Config.getRawConfig()
+                            .getCategory(Config.Categories.servermenu)),
+                    new ConfigElement(
+                        Config.getRawConfig()
+                            .getCategory(Config.Categories.debug))),
                 TabFaces.MODID,
                 TabFaces.MODID,
                 false,
