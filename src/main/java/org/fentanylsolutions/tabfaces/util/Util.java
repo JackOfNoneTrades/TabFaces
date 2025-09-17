@@ -2,7 +2,9 @@ package org.fentanylsolutions.tabfaces.util;
 
 import java.util.UUID;
 
+import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
+import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
 import com.mojang.authlib.GameProfile;
@@ -26,5 +28,9 @@ public class Util {
             TabFaces.error("Failed to get profile for " + displayName + ":" + id.toString());
         }
         return null;
+    }
+
+    public static boolean useNewSkinFormat() {
+        return LoadedMods.skinPortLoaded || LoadedMods.simpleSkinBackportLoaded || Config.forceNewSkinCompat;
     }
 }

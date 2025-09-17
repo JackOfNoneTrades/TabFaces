@@ -34,7 +34,8 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 
-def useSkinport = true;
+def useSkinport = false;
+def useSSBP = false;
 
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev")
@@ -49,8 +50,17 @@ dependencies {
         compileOnly(rfg.deobf("curse.maven:skinport-234948:3212017"))
     }
 
-    //api("roadhog360:simpleskinbackport:1-fent")
+    if (useSSBP) {
+        api("roadhog360:simpleskinbackport:2-fent")
+    } else {
+        compileOnly("roadhog360:simpleskinbackport:2-fent")
+    }
+
+    // runtimeOnlyNonPublishable(rfg.deobf("curse.maven:signpicture-250822:2450569"))
 
     /* Fixes the mod menu being broken ingame, allows for quick config testing */
     runtimeOnlyNonPublishable(rfg.deobf("curse.maven:endercore-231868:4671288"))
+
+    // runtimeOnlyNonPublishable("technicianlp:ReAuthDevEd:1.0.0:dev")
+    runtimeOnlyNonPublishable(rfg.deobf("curse.maven:oauth-513857:4326368"))
 }

@@ -27,7 +27,6 @@ import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.access.IMixinGui;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiScreen;
-import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 import org.lwjgl.opengl.GL11;
@@ -261,7 +260,7 @@ public class ClientUtil {
             VarInstanceClient.minecraftRef.getTextureManager()
                 .bindTexture(rl);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, alpha);
-            if (LoadedMods.skinPortLoaded) {
+            if (Util.useNewSkinFormat()) {
                 // Draw base face: (8, 8) to (16, 16)
                 drawTexFloat(xPos, yPos, 8, 8, 8, 8, 8, 8, 64.0F, 64.0F);
 

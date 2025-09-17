@@ -30,6 +30,10 @@ public class LateMixinLoader implements ILateMixinLoader {
             mixins.add("tabbychat.MixinTabbyChat");
             mixins.add("tabbychat.MixinTCSettingSlider");
         }
+        if (Loader.isModLoaded("simpleskinbackport") && FMLLaunchHandler.side()
+            .isClient()) {
+            mixins.add("simpleskinbackport.MixinUtils");
+        }
         if (Loader.isModLoaded("serverutilities")) {
             mixins.add("serverutilities.MixinServerUtilitiesCommonAccessor");
         }

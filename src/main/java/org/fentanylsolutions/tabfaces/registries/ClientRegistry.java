@@ -6,7 +6,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.Config;
@@ -14,11 +16,13 @@ import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.compat.skinport.SkinPortCompat;
 import org.fentanylsolutions.tabfaces.util.ClientUtil;
+import org.fentanylsolutions.tabfaces.util.MarkerCallback;
 import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 public class ClientRegistry {
 
@@ -74,6 +78,23 @@ public class ClientRegistry {
         playerEntities.remove(displayName);
     }
 
+    public static ResourceLocation getCachedRL(UUID id, String displayname) {
+        GameProfile profile = new GameProfile(id, displayname);
+        SkinManager skinManager = Minecraft.getMinecraft()
+            .func_152342_ad();
+
+        GameProfile fullProfile = VarInstanceClient.sessionService.fillProfileProperties(profile, false);
+        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textures = skinManager.func_152788_a(fullProfile);
+
+        if (textures != null && textures.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+            MinecraftProfileTexture texture = textures.get(MinecraftProfileTexture.Type.SKIN);
+            return skinManager.func_152789_a(texture, MinecraftProfileTexture.Type.SKIN, new MarkerCallback());
+        } else {
+            skinManager.func_152790_a(fullProfile, null, true); // Callback = null, we don't care
+            return SkinManager.field_152793_a;
+        }
+    }
+
     public ResourceLocation getTabMenuResourceLocation(String displayName, boolean removeAfterTTL, int ttl) {
         /* thePlayer is null when we're in the server selection menu */
         if (VarInstanceClient.minecraftRef.thePlayer != null
@@ -120,7 +141,7 @@ public class ClientRegistry {
         if (LoadedMods.skinPortLoaded) {
             return SkinPortCompat.getSkinPortCachedSkin(data.id, displayName);
         } else {
-            return data.skinResourceLocation;
+            return getCachedRL(data.id, displayName); // data.skinResourceLocation;
         }
     }
 

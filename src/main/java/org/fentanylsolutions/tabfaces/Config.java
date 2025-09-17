@@ -8,6 +8,8 @@ public class Config {
 
     private static Configuration config;
 
+    public static boolean forceNewSkinCompat = false;
+
     public static boolean enableFacesInTabMenu;
     public static boolean showQuestionMarkIfUnknown;
     public static boolean trimTabMenu;
@@ -37,6 +39,13 @@ public class Config {
 
         try {
             config.load();
+
+            // General
+            forceNewSkinCompat = config.getBoolean(
+                "forceNewSkinCompat",
+                Categories.general,
+                forceNewSkinCompat,
+                "Force new skin layout rendering. May fix mods similar to Skinport or Simple Skin Backport.");
 
             // Tab Menu
             enableFacesInTabMenu = config.getBoolean(

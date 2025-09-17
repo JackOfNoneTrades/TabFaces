@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 import org.fentanylsolutions.tabfaces.registries.PlayerProfileRegistry;
+import org.fentanylsolutions.tabfaces.util.Util;
 
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 
@@ -22,7 +22,7 @@ public class VarInstanceClient {
      */
     public ResourceLocation defaultResourceLocation = new ResourceLocation(
         TabFaces.MODID,
-        LoadedMods.skinPortLoaded ? "textures/default_square.png" : "textures/default.png");
+        Util.useNewSkinFormat() ? "textures/default_square.png" : "textures/default.png");
     public static Minecraft minecraftRef = Minecraft.getMinecraft();
     public static MinecraftSessionService sessionService = minecraftRef.func_152347_ac();
 }
