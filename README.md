@@ -1,19 +1,27 @@
 # TabFaces mod for Minecraft Forge 1.7.10
 
+![logo](images/logo_small.png)
+
+Display player faces in the server tab menu, in the chat, and the server population info tooltip.
+
+[![hub](images/badges/github.png)](https://github.com/JackOfNoneTrades/TabFaces/releases)
+[![modrinth](images/badges/modrinth.png)](https://modrinth.com/mod/tabfaces)
+[![curse](images/badges/curse.png)](https://www.curseforge.com/minecraft/mc-mods/tabfaces)
+[![maven](images/badges/maven.png)](https://maven.fentanylsolutions.org/#/releases/org/fentanylsolutions/tabfaces/TabFaces)
+![forge](images/badges/forge.png)
+
 ![screeenshot1](images/screenshot1.png)
 ![screeenshot3](images/screenshot3.png)
 ![screeenshot4](images/screenshot4.png)
 
-## Downloads
-* [CurseForge ![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/tabfaces)
-* [Modrinth ![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/tabfaces)
-* [Git ![git](images/icons/git.png)](https://github.com/JackOfNoneTrades/TabFaces/releases)
-
 ## Dependencies
 
-* As of version 1.0.2, [UniMixins](https://modrinth.com/mod/unimixins) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/unimixins), [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/unimixins/versions), [![git](images/icons/git.png)](https://github.com/LegacyModdingMC/UniMixins/releases)) is a required dependency.
-* Prior to version 1.0.10, [CarbonConfig](https://modrinth.com/mod/carbon-config) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/carbon-config), [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/carbon-config), [![git](images/icons/git.png)](https://github.com/Carbon-Config-Project/CarbonConfig)) is a required dependency.
-* As of version 1.0.9, [SkinPort](https://www.curseforge.com/minecraft/mc-mods/skinport) ([![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/skinport), [![git](images/icons/git.png)](https://github.com/zlainsama/SkinPort)) is an optional dependency and has added compat.
+* As of version 1.0.2, [UniMixins](https://modrinth.com/mod/unimixins) [![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/unimixins) [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/unimixins/versions) [![git](images/icons/git.png)](https://github.com/LegacyModdingMC/UniMixins/releases) is a required dependency.
+* Prior to version 1.0.10, [CarbonConfig](https://modrinth.com/mod/carbon-config) [![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/carbon-config) [![modrinth](images/icons/modrinth.png)](https://modrinth.com/mod/carbon-config) [![git](images/icons/git.png)](https://github.com/Carbon-Config-Project/CarbonConfig) is a required dependency.
+* As of version 1.0.9, [SkinPort](https://www.curseforge.com/minecraft/mc-mods/skinport) [![curse](images/icons/curse.png)](https://www.curseforge.com/minecraft/mc-mods/skinport) [![git](images/icons/git.png)](https://github.com/zlainsama/SkinPort) is an optional dependency and has added compat.
+
+## Incompatibilities
+* Better Ping Display is not compatible.
 
 ## FAQ
 ### What does this mod do?
