@@ -13,6 +13,8 @@ public class Config {
     public static boolean enableFacesInTabMenu;
     public static boolean showQuestionMarkIfUnknown;
     public static boolean trimTabMenu;
+    public static int trimTabMenuMaxColumnWidth;
+    public static int trimTabMenuExtraWidth;
     public static int skinTtl;
     public static int skinTtlInterval;
 
@@ -26,6 +28,7 @@ public class Config {
     public static boolean debugMode;
     public static boolean debugInjectServerStatusProfiles;
     public static int debugInjectServerStatusProfilesCount;
+    public static String debugTabListPrefix;
 
     public static class Categories {
 
@@ -62,6 +65,20 @@ public class Config {
                 "Show question mark instead of Steve when a skin can't load");
             trimTabMenu = config
                 .getBoolean("trimTabMenu", Categories.tabmenu, true, "Trim tab list to match number of players");
+            trimTabMenuMaxColumnWidth = config.getInt(
+                "trimTabMenuMaxColumnWidth",
+                Categories.tabmenu,
+                250,
+                50,
+                500,
+                "Maximum column width in pixels when trim tab menu is enabled. Columns widen to fit the longest player name, up to this cap.");
+            trimTabMenuExtraWidth = config.getInt(
+                "trimTabMenuExtraWidth",
+                Categories.tabmenu,
+                0,
+                0,
+                200,
+                "Extra pixels added to measured column width. Useful to account for server rank prefixes that may not be visible during measurement.");
             skinTtl = config.getInt(
                 "skinTtl",
                 Categories.tabmenu,
@@ -107,6 +124,11 @@ public class Config {
                 1,
                 10000,
                 "Server debug: maximum number of profiles injected from config/debug_uuids.json");
+            debugTabListPrefix = config.getString(
+                "debugTabListPrefix",
+                Categories.debug,
+                "",
+                "Server debug: prefix added to all player names in the tab list via a scoreboard team. Useful for testing column width with rank-style prefixes. Empty to disable.");
 
         } catch (Exception e) {
             System.err.println("Error loading config: " + e.getMessage());

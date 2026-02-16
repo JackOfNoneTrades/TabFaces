@@ -2,6 +2,7 @@ package org.fentanylsolutions.tabfaces.mixins.early.minecraftforge;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -54,19 +55,41 @@ public class MixinGuiInGameForge {
 
     @ModifyVariable(remap = false, method = "renderPlayerList", at = @At("STORE"), ordinal = 2)
     private int injectedMaxPlayers(int maxPlayers, @Local NetHandlerPlayClient handler) {
-        /* Adding fake players for debugging */
-        /*
-         * List<net.minecraft.client.gui.GuiPlayerInfo> newPlayerInfoList = new ArrayList();
-         * for (int i = 0; i < 21; i++) {
-         * newPlayerInfoList.add(handler.playerInfoList.get(0));
-         * }
-         * handler.playerInfoList = newPlayerInfoList;
-         */
         if (Config.trimTabMenu) {
             return handler.playerInfoList.size();
         } else {
             return maxPlayers;
         }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @ModifyVariable(remap = false, method = "renderPlayerList", at = @At("STORE"), ordinal = 5)
+    private int adjustColumnWidth(int columnWidth, @Local NetHandlerPlayClient handler,
+        @Local(ordinal = 4) int columns) {
+        if (!Config.trimTabMenu) {
+            return columnWidth;
+        }
+
+        Minecraft mc = Minecraft.getMinecraft();
+        FontRenderer font = mc.fontRenderer;
+        int maxNameWidth = 0;
+
+        List<GuiPlayerInfo> players = (List) handler.playerInfoList;
+        for (int idx = 0; idx < players.size(); idx++) {
+            GuiPlayerInfo player = players.get(idx);
+            ScorePlayerTeam team = mc.theWorld.getScoreboard()
+                .getPlayersTeam(player.name);
+            String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
+            int nameWidth = font.getStringWidth(displayName);
+            if (nameWidth > maxNameWidth) {
+                maxNameWidth = nameWidth;
+            }
+        }
+
+        int faceOffset = Config.enableFacesInTabMenu ? 10 : 0;
+        int measured = maxNameWidth + faceOffset + 12 + 5 + Config.trimTabMenuExtraWidth; // 12 ping icon + 5 padding
+        int desired = Math.min(measured, Config.trimTabMenuMaxColumnWidth);
+        return Math.max(columnWidth, desired);
     }
 
 }

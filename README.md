@@ -40,6 +40,10 @@ Display player faces in the server tab menu, in the chat, and the server populat
 
 It should work on all online servers. Tested on a clean server and one treated with [authlib-injector](https://github.com/yushijinhun/authlib-injector).
 
+### Misc
+
+If you use the debug config to add a team to all members (to test width handling), remove that team with the `tabfaces_dbg_cleanup` command. This command is registered only if both, server and client have the debug config set to `true`.
+
 ### Building
 
 `./gradlew build`.

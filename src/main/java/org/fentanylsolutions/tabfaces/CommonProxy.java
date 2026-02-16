@@ -1,5 +1,6 @@
 package org.fentanylsolutions.tabfaces;
 
+import org.fentanylsolutions.tabfaces.command.CommandDebugCleanup;
 import org.fentanylsolutions.tabfaces.command.CommandTest;
 import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.util.ServerDebugUuidProvider;
@@ -33,8 +34,10 @@ public class CommonProxy {
 
     public void serverStarting(FMLServerStartingEvent event) {
         if (Util.isServer()) {
-            if (TabFaces.DEBUG_MODE) {
+            if (TabFaces.isDebuggingEnabled()) {
+                TabFaces.LOG.info("TabFaces registering Test and Cleanup commands");
                 event.registerServerCommand(new CommandTest());
+                event.registerServerCommand(new CommandDebugCleanup());
             }
         }
     }

@@ -75,9 +75,13 @@ public class TabFaces {
         proxy.serverStarting(event);
     }
 
+    public static boolean isDebuggingEnabled() {
+        return DEBUG_MODE || Config.debugMode;
+    }
+
     public static void debug(String message) {
         if (DEBUG_MODE || Config.debugMode) {
-            LOG.info("DEBUG: " + message);
+            LOG.info("TabFaces [DEBUG]: {}", message);
         }
     }
 
