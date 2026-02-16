@@ -34,6 +34,7 @@ public class EarlyMixinLoader implements IEarlyMixinLoader, IFMLLoadingPlugin {
             mixins.add("minecraftforge.MixinGuiInGameForge");
         } else {
             mixins.add("minecraft.MixinNetHandlerStatusServer");
+            mixins.add("minecraft.MixinServerConfigurationManager");
         }
 
         return mixins;
