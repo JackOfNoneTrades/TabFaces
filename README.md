@@ -29,12 +29,12 @@ Display player faces in the server tab menu, in the chat, and the server populat
 * Player faces in the tab menu backport.
 * Player faces in the server selection menu (`1.0.2`).
 * Player faces in the chat (`1.0.5`).
-* Player faces in TabbyChat ([![tc_git](images/icons/modrinth.png)](https://modrinth.com/mod/tabbychat-unofficial), [![tc_git](images/icons/git.png)](https://github.com/mist475/tabbychat/releases)) (`1.0.7`). Since `1.0.8` TabbyChat specific configs can be changed from the TabbyChat GUI as well.
+* Player faces in TabbyChat [![tc_git](images/icons/modrinth.png)](https://modrinth.com/mod/tabbychat-unofficial) [![tc_git](images/icons/git.png)](https://github.com/mist475/tabbychat/releases) (`1.0.7`). Since `1.0.8` TabbyChat specific configs can be changed from the TabbyChat GUI as well.
 
 ### Client? Server? Which side?
 
 * As of version `1.0.2`, client only, will do nothing on the server.
-* As of version `1.0.8`, server is required for ServerUtilities ([![git](images/icons/git.png)](https://github.com/GTNewHorizons/ServerUtilities)) compat.
+* As of version `1.0.8`, server is required for ServerUtilities [![git](images/icons/git.png)](https://github.com/GTNewHorizons/ServerUtilities) compat.
 
 ### Will this work with [insert auth mod]?
 
