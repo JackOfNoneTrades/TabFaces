@@ -3,7 +3,6 @@ package org.fentanylsolutions.tabfaces.util;
 import java.net.InetAddress;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.ServerStatusResponse;
@@ -18,7 +17,6 @@ import net.minecraft.util.IChatComponent;
 
 import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
-import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 
 import com.mojang.authlib.GameProfile;
 
@@ -90,28 +88,19 @@ public class PingUtil {
                 boolean targetFound = false;
                 if (profiles != null && profiles.length > 0) {
                     for (GameProfile profile : profiles) {
-                        ClientRegistry.Data res = TabFaces.varInstanceClient.clientRegistry
-                            .getByDisplayName(profile.getName());
-                        if (res == null || res.id == null) {
-                            TabFaces.varInstanceClient.clientRegistry
-                                .insert(profile.getName(), profile.getId(), null, false, -1);
-                            if (profile.getName()
-                                .equals(targetDisplayName)) {
-                                targetFound = true;
-                            }
+                        TabFaces.varInstanceClient.clientRegistry
+                            .insertOrUpdateFromPing(profile.getName(), profile.getId(), false, -1);
+                        if (profile.getName()
+                            .equals(targetDisplayName)) {
+                            targetFound = true;
                         }
                     }
                 } else {
                     TabFaces.debug("No players provided by server.");
                 }
                 if (!targetFound) {
-                    TabFaces.varInstanceClient.clientRegistry.insert(
-                        targetDisplayName,
-                        null,
-                        Config.showQuestionMarkIfUnknown ? TabFaces.varInstanceClient.defaultResourceLocation
-                            : AbstractClientPlayer.getLocationSkin(targetDisplayName),
-                        true,
-                        Config.skinTtl);
+                    TabFaces.varInstanceClient.clientRegistry
+                        .insertOrUpdateFromPing(targetDisplayName, null, true, Config.skinTtl);
                 }
             } else {
                 TabFaces.debug("No player data in server response.");

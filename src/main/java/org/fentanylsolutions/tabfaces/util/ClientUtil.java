@@ -109,7 +109,7 @@ public class ClientUtil {
             if (profiles != null) {
                 for (String line : textLines) {
                     ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry.getByDisplayName(line);
-                    if (data != null && data.foundRealSkin) {
+                    if (data != null && data.hasRealSkin()) {
                         int tmpWidth = fontRenderer.getStringWidth(line) + faceWidth;
                         if (tmpWidth > boxWidth) {
                             boxWidth = tmpWidth;
@@ -212,7 +212,7 @@ public class ClientUtil {
 
                             ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry
                                 .getByDisplayName(profile.getName());
-                            if (data == null || !data.foundRealSkin) {
+                            if (data == null || !data.hasRealSkin()) {
                                 rl = null;
                                 fontRenderer.drawStringWithShadow(s1, boxOffsetX, boxOffsetY, -1);
                             } else {

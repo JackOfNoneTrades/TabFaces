@@ -24,6 +24,8 @@ public class Config {
     public static float faceXOffsetTabbyChat;
 
     public static boolean debugMode;
+    public static boolean debugInjectServerStatusProfiles;
+    public static int debugInjectServerStatusProfilesCount;
 
     public static class Categories {
 
@@ -93,6 +95,18 @@ public class Config {
 
             // Debug
             debugMode = config.getBoolean("debugMode", Categories.debug, false, "Enable debug logging");
+            debugInjectServerStatusProfiles = config.getBoolean(
+                "debugInjectServerStatusProfiles",
+                Categories.debug,
+                false,
+                "Server debug: inject sample player profiles into ping response from config/debug_uuids.json");
+            debugInjectServerStatusProfilesCount = config.getInt(
+                "debugInjectServerStatusProfilesCount",
+                Categories.debug,
+                5,
+                1,
+                10000,
+                "Server debug: maximum number of profiles injected from config/debug_uuids.json");
 
         } catch (Exception e) {
             System.err.println("Error loading config: " + e.getMessage());

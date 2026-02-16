@@ -2,6 +2,7 @@ package org.fentanylsolutions.tabfaces;
 
 import org.fentanylsolutions.tabfaces.command.CommandTest;
 import org.fentanylsolutions.tabfaces.compat.LoadedMods;
+import org.fentanylsolutions.tabfaces.util.ServerDebugUuidProvider;
 import org.fentanylsolutions.tabfaces.util.Util;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -21,6 +22,9 @@ public class CommonProxy {
         TabFaces.info("TabFaces version " + Tags.VERSION + " running on " + (Util.isServer() ? "Server" : "Client"));
         LoadedMods.init();
         Config.loadConfig(TabFaces.confFile);
+        if (Util.isServer()) {
+            ServerDebugUuidProvider.ensureDebugFileExists();
+        }
     }
 
     public void init(FMLInitializationEvent event) {}

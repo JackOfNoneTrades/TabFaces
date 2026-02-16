@@ -21,6 +21,10 @@ public class Util {
 
     /* This function should be called from a thread, as it makes a sync network call */
     public static GameProfile getFullProfile(UUID id, String displayName) {
+        if (id == null) {
+            TabFaces.warn("Cannot resolve profile for " + displayName + ": UUID is null");
+            return null;
+        }
         GameProfile profile = new GameProfile(id, displayName);
         try {
             return VarInstanceClient.sessionService.fillProfileProperties(profile, true);
