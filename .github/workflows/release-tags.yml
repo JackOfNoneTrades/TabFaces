@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release-tags:
-    uses: ./.github/workflows/release-tags-main.yml
+    uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/release-tags.yml@master
     secrets:
       MAVEN_USER: ${{ secrets.MAVEN_USER }}
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
