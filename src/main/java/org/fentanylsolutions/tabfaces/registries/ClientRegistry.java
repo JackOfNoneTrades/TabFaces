@@ -184,8 +184,24 @@ public class ClientRegistry {
                 break;
 
             case RESOLVED:
+                break;
+
             case RESOLVED_PLACEHOLDER:
             case FAILED:
+                if (data.id != null
+                    && System.currentTimeMillis() - data.lastAttemptTimestamp >= Config.failedRetrySeconds * 1000L) {
+                    TabFaces.debug(
+                        "Recycling " + data.state
+                            + " entry for "
+                            + data.displayName
+                            + " after "
+                            + Config.failedRetrySeconds
+                            + "s");
+                    data.profile = null;
+                    data.skinResourceLocation = null;
+                    data.retryCount = 0;
+                    data.state = FetchState.PENDING_PROFILE;
+                }
                 break;
         }
 
@@ -257,6 +273,7 @@ public class ClientRegistry {
                 } else if (profile != null) {
                     data.profile = profile;
                     data.skinResourceLocation = getDefaultSkin(data.displayName);
+                    data.lastAttemptTimestamp = System.currentTimeMillis();
                     data.state = FetchState.RESOLVED_PLACEHOLDER;
                     TabFaces.debug("Profile resolved for " + data.displayName + " but no skin properties");
                 } else {
@@ -283,6 +300,7 @@ public class ClientRegistry {
                     + ")");
         } else {
             data.skinResourceLocation = getDefaultSkin(data.displayName);
+            data.lastAttemptTimestamp = System.currentTimeMillis();
             data.state = FetchState.FAILED;
             TabFaces.warn(
                 "Profile resolution permanently failed for " + data.displayName

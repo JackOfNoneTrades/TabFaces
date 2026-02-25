@@ -17,6 +17,7 @@ public class Config {
     public static int trimTabMenuExtraWidth;
     public static int skinTtl;
     public static int skinTtlInterval;
+    public static int failedRetrySeconds;
 
     public static boolean enableFacesInServerMenu;
 
@@ -93,6 +94,13 @@ public class Config {
                 10,
                 Integer.MAX_VALUE,
                 "Interval in seconds for skin GC");
+            failedRetrySeconds = config.getInt(
+                "failedRetrySeconds",
+                Categories.tabmenu,
+                60,
+                10,
+                Integer.MAX_VALUE,
+                "Seconds before a failed or placeholder skin resolution is retried");
 
             // Server Menu
             enableFacesInServerMenu = config.getBoolean(
