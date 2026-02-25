@@ -233,7 +233,11 @@ public class ClientRegistry {
                 data.state = FetchState.RESOLVED;
                 TabFaces.debug("Skin fully resolved for " + data.displayName + ": " + rl);
             } else {
-                skinManager.func_152790_a(data.profile, new MarkerCallback(), true);
+                // Profile has no skin texture, use placeholder instead retrying every frame via func_152790_a.
+                data.skinResourceLocation = getDefaultSkin(data.displayName);
+                data.lastAttemptTimestamp = System.currentTimeMillis();
+                data.state = FetchState.RESOLVED_PLACEHOLDER;
+                TabFaces.debug("No skin texture for " + data.displayName + ", using placeholder");
             }
         } catch (Exception e) {
             TabFaces.error("Error resolving skin for " + data.displayName + ": " + e.getMessage());
