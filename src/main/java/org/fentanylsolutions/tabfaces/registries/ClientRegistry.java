@@ -216,8 +216,14 @@ public class ClientRegistry {
         try {
             SkinManager skinManager = Minecraft.getMinecraft()
                 .func_152342_ad();
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textures = skinManager
-                .func_152788_a(data.profile);
+
+            // Bypass SkinManager's LoadingCache (func_152788_a) and call the session
+            // service directly. The LoadingCache is keyed by GameProfile (UUID + name)
+            // and can be poisoned with an empty textures map when AbstractClientPlayer's
+            // constructor triggers a load for the same UUID before properties are filled.
+            // Since data.profile already carries properties, getTextures will succeed.
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> textures = VarInstanceClient.sessionService
+                .getTextures(data.profile, false);
 
             if (textures != null && textures.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 MinecraftProfileTexture texture = textures.get(MinecraftProfileTexture.Type.SKIN);
