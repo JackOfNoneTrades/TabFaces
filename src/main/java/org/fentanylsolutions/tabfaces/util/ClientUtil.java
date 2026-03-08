@@ -27,6 +27,8 @@ import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.access.IMixinGui;
 import org.fentanylsolutions.tabfaces.access.IMixinGuiScreen;
+import org.fentanylsolutions.tabfaces.compat.LoadedMods;
+import org.fentanylsolutions.tabfaces.compat.wawelauth.WawelAuthCompat;
 import org.fentanylsolutions.tabfaces.registries.ClientRegistry;
 import org.fentanylsolutions.tabfaces.varinstances.VarInstanceClient;
 import org.lwjgl.opengl.GL11;
@@ -257,6 +259,10 @@ public class ClientUtil {
 
     public static void drawPlayerFace(ResourceLocation rl, float xPos, float yPos, float alpha) {
         if (rl != null) {
+            if (LoadedMods.wawelAuthLoaded) {
+                WawelAuthCompat.drawFace(rl, xPos, yPos, alpha);
+                return;
+            }
             VarInstanceClient.minecraftRef.getTextureManager()
                 .bindTexture(rl);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, alpha);

@@ -35,6 +35,8 @@ public class Util {
     }
 
     public static boolean useNewSkinFormat() {
-        return LoadedMods.skinPortLoaded || LoadedMods.simpleSkinBackportLoaded || Config.forceNewSkinCompat;
+        return LoadedMods.skinPortLoaded || LoadedMods.simpleSkinBackportLoaded
+            || LoadedMods.wawelAuthLoaded
+            || Config.forceNewSkinCompat;
     }
 }

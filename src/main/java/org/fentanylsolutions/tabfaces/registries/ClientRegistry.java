@@ -19,6 +19,7 @@ import org.fentanylsolutions.tabfaces.Config;
 import org.fentanylsolutions.tabfaces.TabFaces;
 import org.fentanylsolutions.tabfaces.compat.LoadedMods;
 import org.fentanylsolutions.tabfaces.compat.skinport.SkinPortCompat;
+import org.fentanylsolutions.tabfaces.compat.wawelauth.WawelAuthCompat;
 import org.fentanylsolutions.tabfaces.util.MarkerCallback;
 import org.fentanylsolutions.tabfaces.util.PingUtil;
 import org.fentanylsolutions.tabfaces.util.Util;
@@ -159,6 +160,18 @@ public class ClientRegistry {
             } else {
                 data = newData;
                 submitPingTask(displayName);
+            }
+            return data.skinResourceLocation != null ? data.skinResourceLocation : getDefaultSkin(displayName);
+        }
+
+        if (LoadedMods.wawelAuthLoaded && data.id != null) {
+            ResourceLocation resolved = WawelAuthCompat.getSkin(data.id, data.displayName);
+            if (WawelAuthCompat.isPlaceholder(resolved)) {
+                data.skinResourceLocation = getDefaultSkin(data.displayName);
+                data.state = FetchState.RESOLVED_PLACEHOLDER;
+            } else {
+                data.skinResourceLocation = resolved;
+                data.state = FetchState.RESOLVED;
             }
             return data.skinResourceLocation != null ? data.skinResourceLocation : getDefaultSkin(displayName);
         }

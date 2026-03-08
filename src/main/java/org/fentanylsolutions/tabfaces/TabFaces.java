@@ -20,7 +20,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
     version = Tags.VERSION,
     name = "TabFaces",
     acceptedMinecraftVersions = "[1.7.10]",
-    dependencies = "required-after:unimixins;after:tabbychat",
+    dependencies = "required-after:unimixins;after:tabbychat;after:wawelauth",
     acceptableRemoteVersions = "*",
     guiFactory = "org.fentanylsolutions.tabfaces.gui.GuiFactory")
 public class TabFaces {
