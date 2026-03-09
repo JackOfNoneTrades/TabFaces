@@ -25,22 +25,22 @@ public class PingUtil {
     public static final int DEFAULT_PORT = 25565;
 
     public static String[] parseAddress(String input) {
-        String address;
-        int port = DEFAULT_PORT;
+        int lastColon = input.lastIndexOf(':');
 
-        if (input.contains(":")) {
-            String[] parts = input.split(":", 2);
-            address = parts[0];
+        if (lastColon >= 0 && (input.indexOf(']') < 0 || lastColon > input.indexOf(']'))) {
+            String address = input.substring(0, lastColon)
+                .replace("[", "")
+                .replace("]", "");
+            String port = input.substring(lastColon + 1);
             try {
-                port = Integer.parseInt(parts[1]);
+                return new String[] { address, String.valueOf(Integer.parseInt(port)) };
             } catch (NumberFormatException e) {
                 TabFaces.error("Invalid port number, using default: " + DEFAULT_PORT);
             }
-        } else {
-            address = input;
         }
 
-        return new String[] { address, String.valueOf(port) };
+        return new String[] { input.replace("[", "")
+            .replace("]", ""), String.valueOf(DEFAULT_PORT) };
     }
 
     public static class ServerStatusCallback {
