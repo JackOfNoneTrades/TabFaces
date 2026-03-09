@@ -9,6 +9,7 @@ Display player faces in the server tab menu, in the chat, and the server populat
 [![curse](images/badges/curse.png)](https://www.curseforge.com/minecraft/mc-mods/tabfaces)
 [![maven](images/badges/maven.png)](https://maven.fentanylsolutions.org/#/releases/org/fentanylsolutions/tabfaces/TabFaces)
 ![forge](images/badges/forge.png)
+[![cord](images/badges/cord.png)](https://discord.gg/xAWCqGrguG)
 
 ![screeenshot1](images/screenshot1.png)
 ![screeenshot3](images/screenshot3.png)
