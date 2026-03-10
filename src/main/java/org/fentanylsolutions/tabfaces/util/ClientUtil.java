@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 import org.fentanylsolutions.tabfaces.Config;
@@ -40,6 +42,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ClientUtil {
+
+    private static final String CHAT_MSG_COMMAND_PREFIX = "/msg ";
 
     public static FontRenderer fontRenderer = null;
     public static int faceWidth = 10;
@@ -73,6 +77,37 @@ public class ClientUtil {
             .getMinecraftServerInstance()
             .getConfigurationManager()
             .func_152596_g(entityPlayerMP.getGameProfile());
+    }
+
+    public static String findUsernameInClickEvents(IChatComponent component) {
+        if (component == null) {
+            return null;
+        }
+
+        for (Object partObj : component) {
+            IChatComponent part = (IChatComponent) partObj;
+            if (part == null || part.getChatStyle() == null) {
+                continue;
+            }
+
+            ClickEvent clickEvent = part.getChatStyle()
+                .getChatClickEvent();
+            if (clickEvent == null || clickEvent.getValue() == null) {
+                continue;
+            }
+
+            String value = clickEvent.getValue();
+            if (value.startsWith(CHAT_MSG_COMMAND_PREFIX)) {
+                String name = value.substring(CHAT_MSG_COMMAND_PREFIX.length())
+                    .trim()
+                    .replaceAll("(?i)§[0-9A-FK-OR]", "");
+                if (!name.isEmpty()) {
+                    return name;
+                }
+            }
+        }
+
+        return null;
     }
 
     public static void drawHoveringTextWithFaces(GuiScreen screen, GameProfile[] profiles, List<String> textLines,

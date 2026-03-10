@@ -85,31 +85,7 @@ public abstract class MixinGuiNewChat {
             List<IChatComponent> siblings = currentChatLine.func_151461_a()
                 .getSiblings();
             if (siblings.size() > 2) {
-                String detectedName = null;
-                String commandPrefix = "/msg ";
-                for (int s = 0; s < siblings.size() - 2; ++s) {
-                    if (siblings.get(s)
-                        .getChatStyle() != null
-                        && siblings.get(s)
-                            .getChatStyle()
-                            .getChatClickEvent() != null
-                        && siblings.get(s)
-                            .getChatStyle()
-                            .getChatClickEvent()
-                            .getValue() != null
-                        && siblings.get(s)
-                            .getChatStyle()
-                            .getChatClickEvent()
-                            .getValue()
-                            .startsWith(commandPrefix)) {
-                        detectedName = siblings.get(s)
-                            .getChatStyle()
-                            .getChatClickEvent()
-                            .getValue()
-                            .substring(commandPrefix.length())
-                            .trim();
-                    }
-                }
+                String detectedName = ClientUtil.findUsernameInClickEvents(currentChatLine.func_151461_a());
                 for (int s = 0; s < siblings.size() - 2; ++s) {
                     if (siblings.get(s)
                         .getUnformattedText()
@@ -167,6 +143,28 @@ public abstract class MixinGuiNewChat {
                         }
                     }
 
+                }
+
+                if (detectedName != null) {
+                    int bracketStart = text.indexOf('<');
+                    if (bracketStart >= 0) {
+                        String prefix = text.substring(0, bracketStart);
+                        String remainder = text.substring(bracketStart);
+                        int xCursor = x;
+                        if (!prefix.isEmpty()) {
+                            xCursor += fontRenderer.drawStringWithShadow(prefix, xCursor, y, color) - 1;
+                        }
+
+                        ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
+                            .getTabMenuResourceLocation(detectedName, false, -1);
+                        if (rl != null) {
+                            float alpha = (float) (color >> 24 & 255) / 255.0F;
+                            ClientUtil.drawPlayerFace(rl, xCursor + Config.faceXOffset, y - 0.5f, alpha);
+                            xCursor += 11;
+                        }
+
+                        return fontRenderer.drawStringWithShadow(remainder, xCursor, y, color);
+                    }
                 }
             }
         }
