@@ -27,7 +27,8 @@ public class WawelAuthCompat {
     }
 
     public static boolean isPlaceholder(ResourceLocation resourceLocation) {
-        return resourceLocation == null || WawelSkinResolver.STEVE.equals(resourceLocation);
+        return resourceLocation == null || WawelSkinResolver.getDefaultSkin()
+            .equals(resourceLocation);
     }
 
     public static void drawFace(ResourceLocation resourceLocation, float xPos, float yPos, float alpha) {
