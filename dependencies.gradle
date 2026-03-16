@@ -43,7 +43,7 @@ dependencies {
     compileOnly(rfg.deobf("maven.modrinth:tabbychat-unofficial:FgpPdGV9"))
     compileOnly("com.github.GTNewHorizons:GTNHLib:0.9.39:dev")
     compileOnly("com.github.GTNewHorizons:ServerUtilities:2.2.18:dev")
-    compileOnly(files("libs/wawelauth-testerino-dev.jar"))
+    compileOnly("org.fentanylsolutions.wawelauth:WawelAuth:0054bcd-snapshot")
 
     if (useSkinport) {
         api(rfg.deobf("curse.maven:skinport-234948:3212017"))
