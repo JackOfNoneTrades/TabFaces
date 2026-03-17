@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -111,7 +112,7 @@ public class ClientUtil {
     }
 
     public static void drawHoveringTextWithFaces(GuiScreen screen, GameProfile[] profiles, List<String> textLines,
-        int x, int y) {
+        int x, int y, ServerData serverData) {
         if (!textLines.isEmpty()) {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.disableStandardItemLighting();
@@ -145,8 +146,24 @@ public class ClientUtil {
 
             if (profiles != null) {
                 for (String line : textLines) {
-                    ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry.getByDisplayName(line);
-                    if (data != null && data.hasRealSkin()) {
+                    boolean hasFace = false;
+                    if (LoadedMods.wawelAuthLoaded && serverData != null) {
+                        for (GameProfile profile : profiles) {
+                            if (profile.getName()
+                                .equals(line)
+                                && !profile.getId()
+                                    .equals(fakePlayerUUID)) {
+                                ResourceLocation wrl = WawelAuthCompat
+                                    .getSkinForServerTooltip(profile.getId(), line, serverData);
+                                hasFace = wrl != null && !WawelAuthCompat.isPlaceholder(wrl);
+                                break;
+                            }
+                        }
+                    } else {
+                        ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry.getByDisplayName(line);
+                        hasFace = data != null && data.hasRealSkin();
+                    }
+                    if (hasFace) {
                         int tmpWidth = fontRenderer.getStringWidth(line) + faceWidth;
                         if (tmpWidth > boxWidth) {
                             boxWidth = tmpWidth;
@@ -244,12 +261,23 @@ public class ClientUtil {
                                     .insert(s1, profile.getId(), null, true, serverGuiTTL);
                             }
 
-                            ResourceLocation rl = TabFaces.varInstanceClient.clientRegistry
-                                .getTabMenuResourceLocation(s1, true, serverGuiTTL);
+                            ResourceLocation rl = resolveServerTooltipFace(
+                                profile.getId(),
+                                s1,
+                                serverData,
+                                true,
+                                serverGuiTTL);
 
-                            ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry
-                                .getByDisplayName(profile.getName());
-                            if (data == null || !data.hasRealSkin()) {
+                            boolean showFace;
+                            if (LoadedMods.wawelAuthLoaded && serverData != null) {
+                                showFace = rl != null && !WawelAuthCompat.isPlaceholder(rl);
+                            } else {
+                                ClientRegistry.Data data = TabFaces.varInstanceClient.clientRegistry
+                                    .getByDisplayName(profile.getName());
+                                showFace = data != null && data.hasRealSkin();
+                            }
+
+                            if (!showFace) {
                                 rl = null;
                                 fontRenderer.drawStringWithShadow(s1, boxOffsetX, boxOffsetY, -1);
                             } else {
@@ -282,6 +310,24 @@ public class ClientUtil {
             RenderHelper.enableStandardItemLighting();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         }
+    }
+
+    /**
+     * Resolve a face for the server selection tooltip.
+     * When WawelAuth is loaded, delegates to WawelAuthCompat.getSkinForServerTooltip.
+     * Otherwise falls back to the standard ClientRegistry path.
+     */
+    private static ResourceLocation resolveServerTooltipFace(UUID uuid, String displayName, ServerData serverData,
+        boolean removeAfterTTL, int ttl) {
+        if (LoadedMods.wawelAuthLoaded && serverData != null && uuid != null) {
+            ResourceLocation rl = WawelAuthCompat.getSkinForServerTooltip(uuid, displayName, serverData);
+            if (rl != null) {
+                return rl;
+            }
+            // WawelAuth returned null (unknown server, no bound account): don't fetch
+            return null;
+        }
+        return TabFaces.varInstanceClient.clientRegistry.getTabMenuResourceLocation(displayName, removeAfterTTL, ttl);
     }
 
     public static void drawPlayerFace(String displayName, int xPos, int yPos, float alpha) {
